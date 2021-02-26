@@ -1,0 +1,15 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+        
+    Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface:
+        class: Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
+            
+    Symfony\Component\Routing\RouterInterface:
+        class: Kematjaya\MenuBundle\Tests\Util\Router
+        
+    router:
+        alias: Symfony\Component\Routing\RouterInterface
+        public: true

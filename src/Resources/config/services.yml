@@ -1,0 +1,19 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        
+    Kematjaya\MenuBundle\Builder\MenuBuilderInterface:
+        class: Kematjaya\MenuBundle\Builder\YAMLMenuBuilder
+        
+    Kematjaya\MenuBundle\Credential\RouteCredentialInterface:
+        class: Kematjaya\MenuBundle\Credential\RouteCredential
+        
+    Kematjaya\MenuBundle\Listener\CredentialListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+            
+    Kematjaya\MenuBundle\MenuTreeGenerator: ~
+    Kematjaya\MenuBundle\Twig\MenuExtension:
+        tags: ['twig.extension']
