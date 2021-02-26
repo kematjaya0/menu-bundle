@@ -13,3 +13,6 @@ services:
     router:
         alias: Symfony\Component\Routing\RouterInterface
         public: true
+        
+    Symfony\Component\Routing\Generator\UrlGeneratorInterface:
+        class: Kematjaya\MenuBundle\Tests\Util\UrlGenerator
