@@ -1,0 +1,9 @@
+{% for k, group in menus %}
+    {% if default_group == k %}
+        {% for k, menu in group.childs %}
+            {{ include('@Menu/default-group.html.twig', {group: menu}) }}
+        {% endfor %}
+    {% else %}
+        {{ include('@Menu/group.html.twig', {group: group}) }}
+    {% endif %}
+{% endfor %}
