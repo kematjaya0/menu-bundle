@@ -50,7 +50,7 @@ class CredentialListener
             return;
         }
         
-        $response = new RedirectResponse($this->urlGenerator->generate('app_access_denied'));
+        $response = new RedirectResponse($this->urlGenerator->generate('kmj_access_denied'));
         $event->setResponse($response);
     }
 }

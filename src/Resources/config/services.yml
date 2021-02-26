@@ -17,3 +17,7 @@ services:
     Kematjaya\MenuBundle\MenuTreeGenerator: ~
     Kematjaya\MenuBundle\Twig\MenuExtension:
         tags: ['twig.extension']
+        
+    Kematjaya\MenuBundle\Controller\SecurityController:
+        calls: 
+            - setContainer: ['@service_container']
