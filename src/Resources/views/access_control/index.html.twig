@@ -1,0 +1,32 @@
+{% extends '@Menu/base_layout.html.twig' %}
+
+{% block title %}
+    {{ 'access_control'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>{{ 'name'|trans }}</th>
+                    <th>{{ 'actions'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for role in roles %}
+                <tr>
+                    <td>{{ role|trans }}</td>
+                    <td>
+                        {{ link_to('kmj_menu_access_control_show', {'role': role}, {class: "btn btn-xs btn-outline-primary", 'icon': '<span class="fa fa-desktop"></span>', label: 'show'|trans}) }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">{{ 'no_records_found'|trans }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -5,5 +5,10 @@
     <route id="kmj_access_denied" path="/access-denied" methods="GET">
         <default key="_controller">Kematjaya\MenuBundle\Controller\SecurityController::accessDenied</default>
     </route>
+    <route id="kmj_menu_access_control_index" path="/access-control" methods="GET POST">
+        <default key="_controller">Kematjaya\MenuBundle\Controller\AccessControlController::index</default>
+    </route>
+    <route id="kmj_menu_access_control_show" path="/access-control/{role}/show" methods="GET POST">
+        <default key="_controller">Kematjaya\MenuBundle\Controller\AccessControlController::show</default>
+    </route>
 </routes>
-

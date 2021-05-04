@@ -1,0 +1,48 @@
+{% extends '@Menu/base_layout.html.twig' %}
+
+{% block title %}
+    {{ 'show'|trans }} {{ 'access_control'|trans }}: {{ role|trans }}
+{% endblock %}
+
+{% block actions %}
+    {{ link_to('kmj_menu_access_control_index', {}, {class: "btn btn-sm btn-outline-primary", 'icon': '<span class="fa fa-list"></span>', label: 'back'|trans}) }}
+{% endblock %}
+
+{% block body %}
+    
+    {% form_theme form 'bootstrap_3_layout.html.twig' %}
+    
+    {{ form_start(form) }}
+    
+    <table class="table table-bordered table-hover">
+        <tbody>
+            {% set skip = ['_token', 'role'] %}
+            {% for k, row in form %}
+            {% if k not in skip %}
+            <tr>
+                <th width="30%">{{ k|trans }}</th>
+                <td>
+                    {% for name, access_form in row %}
+                        {% for n, access in access_form %}
+                            {{ form_widget(access, {attr: {'style': 'width: fit-content;display: inline'}}) }}
+                        {% endfor %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+        
+    <div class="pull-right">
+        <button type="submit" class="btn btn-sm btn-outline-success">
+            <span class="fa fa-save"></span> 
+            {{ 'save'|trans }}
+        </button>
+        {{ link_to('kmj_menu_access_control_index', {}, {class: "btn btn-sm btn-outline-primary", 'icon': '<span class="fa fa-list"></span>', label: 'back'|trans}) }}
+    </div>
+        
+    {{ form_end(form) }}
+    
+{% endblock %} 
+    
