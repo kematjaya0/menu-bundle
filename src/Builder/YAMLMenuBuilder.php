@@ -17,6 +17,10 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class YAMLMenuBuilder implements MenuBuilderInterface
 {
+    /**
+     * 
+     * @var string
+     */
     private $basePath;
     
     public function __construct(ParameterBagInterface $bag) 
@@ -48,7 +52,8 @@ class YAMLMenuBuilder implements MenuBuilderInterface
         $filePath = $this->basePath . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'menu.yaml';
         if (!$filesystem->exists($filePath)) {
             
-            throw new \Exception(sprintf("menu file %s not found", $filePath));
+            $string = Yaml::dump([]);
+            $filesystem->dumpFile($filePath, $string);
         }
         
         return Yaml::parseFile($filePath);
