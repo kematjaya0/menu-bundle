@@ -9,6 +9,7 @@ namespace Kematjaya\MenuBundle\Credential;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
+use Kematjaya\UserBundle\Entity\DefaultUser;
 
 /**
  * @package Kematjaya\MenuBundle\Credential
@@ -64,11 +65,21 @@ class RouteCredential implements RouteCredentialInterface
             return false;
         }
         
-        $userRoles = $user->getRoles();
-        
-        return in_array(end($userRoles), $menu['role']);
+        return in_array($this->getSingleRole($user), $menu['role']);
     }
 
+    protected function getSingleRole(UserInterface $user):?string
+    {
+        if ($user instanceof DefaultUser) {
+            
+            return $user->getSingleRole();
+        }
+        
+        $userRoles = $user->getRoles();
+        
+        return end($userRoles);
+    }
+    
     protected function getWhiteLists():array
     {
         return [
