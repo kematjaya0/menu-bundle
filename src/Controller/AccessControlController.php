@@ -9,7 +9,7 @@ namespace Kematjaya\MenuBundle\Controller;
 use Kematjaya\Breadcrumb\Lib\Builder as BreadcrumbBuilder;
 use Kematjaya\UserBundle\Entity\KmjUserInterface;
 use Kematjaya\URLBundle\Type\AccessControlType;
-use Kematjaya\URLBundle\Source\RoutingSourceInterface;
+use Kematjaya\URLBundle\Repository\URLRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -31,7 +31,7 @@ class AccessControlController extends AbstractController
         ]);
     }
     
-    public function show(Request $request, string $role, BreadcrumbBuilder $builder, RoutingSourceInterface $routingSource)
+    public function show(Request $request, string $role, BreadcrumbBuilder $builder, URLRepositoryInterface $URLRepository)
     {
         $builder->add('access_control', 'kmj_menu_access_control_index');
         $builder->add('show');
@@ -44,7 +44,9 @@ class AccessControlController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() and $form->isValid()) {
             try {
-                $routingSource->dump($form->getData());
+                
+                $URLRepository->save($form->getData());
+                
                 $this->addFlash('info', 'update berhasil.');
                 
                 return $this->redirectToRoute('kmj_menu_access_control_show', ['role' => $role]);
