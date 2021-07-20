@@ -18,4 +18,6 @@ interface MenuBuilderInterface
     public function exist(string $routeName):bool;
     
     public function getMenu(string $routeName):array;
+    
+    public function dump(array $routes):void;
 }

@@ -46,17 +46,27 @@ class YAMLMenuBuilder implements MenuBuilderInterface
         return $menus[$routeName];
     }
     
+    public function getFilePath():string
+    {
+        return $this->basePath . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'menu.yaml';
+    }
+    
     public function getMenus(): array 
     {
         $filesystem = new Filesystem();
-        $filePath = $this->basePath . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'menu.yaml';
-        if (!$filesystem->exists($filePath)) {
-            
-            $string = Yaml::dump([]);
-            $filesystem->dumpFile($filePath, $string);
+        if (!file_exists($this->getFilePath())) {
+            $this->dump([]);
         }
         
-        return Yaml::parseFile($filePath);
+        return Yaml::parseFile($this->getFilePath());
     }
 
+    public function dump(array $routes = []):void
+    {
+        $string = Yaml::dump($routes);
+        
+        $filesystem = new Filesystem();
+        
+        $filesystem->dumpFile($this->getFilePath(), $string);
+    }
 }

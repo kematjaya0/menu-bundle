@@ -10,6 +10,9 @@ services:
     Kematjaya\MenuBundle\Credential\RouteCredentialInterface:
         class: Kematjaya\MenuBundle\Credential\URLCredential
         
+    Kematjaya\URLBundle\Repository\URLRepositoryInterface:
+        class: Kematjaya\MenuBundle\Repository\URLRepository
+            
     Kematjaya\MenuBundle\Listener\CredentialListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
