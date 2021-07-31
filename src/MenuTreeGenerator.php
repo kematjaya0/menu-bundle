@@ -57,12 +57,16 @@ class MenuTreeGenerator
             }
             
             $groupName = isset($menu['group']) ? $menu['group'] : self::GROUP_DEFAULT;
-            $group = $this->createGroup($groupName, $k);
+            $group = $this->createGroup($groupName, $k, $menu['icon']);
+            if (isset($menu['icon_group']) and $menu['icon_group']) {
+                $group->setIcon($menu['icon']);
+            }
+            
             $menu['route'] = $k;
             $this->createMenu($group, $menu);
             $this->menus->offsetSet($group->getName(), $group);
         }
-        
+        //dump($this->menus);exit;
         return $this->menus;
     }
     
