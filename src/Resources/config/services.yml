@@ -17,6 +17,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
             
+    Kematjaya\MenuBundle\Listener\ExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+            
     Kematjaya\MenuBundle\MenuTreeGenerator: ~
     Kematjaya\MenuBundle\Twig\MenuExtension:
         tags: ['twig.extension']

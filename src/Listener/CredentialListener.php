@@ -7,9 +7,9 @@
 namespace Kematjaya\MenuBundle\Listener;
 
 use Kematjaya\MenuBundle\Credential\RouteCredentialInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * @package Kematjaya\MenuBundle\Listener
@@ -50,7 +50,6 @@ class CredentialListener
             return;
         }
         
-        $response = new RedirectResponse($this->urlGenerator->generate('kmj_access_denied'));
-        $event->setResponse($response);
+        throw new AccessDeniedHttpException();
     }
 }
