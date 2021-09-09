@@ -56,6 +56,13 @@ class ExceptionListener
         }
         
         if ($exception instanceof HttpException) {
+            $codes = [
+                Response::HTTP_UNAUTHORIZED
+            ];
+            if (!in_array($exception->getStatusCode(), $codes)) {
+                
+                return;
+            }
             
             $response = new RedirectResponse(
                 $this->urlGenerator->generate('kmj_user_login')
