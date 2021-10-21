@@ -23,9 +23,17 @@ class YAMLMenuBuilder implements MenuBuilderInterface
      */
     private $basePath;
     
+    /**
+     * 
+     * @var string
+     */
+    private $fileName;
+    
     public function __construct(ParameterBagInterface $bag) 
     {
-        $this->basePath = $bag->get('kernel.project_dir');
+        $configs = $bag->get('menu');
+        $this->basePath = $configs['resources_dir'];
+        $this->fileName = $configs['resources_file'];
     }
     
     public function exist(string $routeName): bool 
@@ -48,7 +56,7 @@ class YAMLMenuBuilder implements MenuBuilderInterface
     
     public function getFilePath():string
     {
-        return $this->basePath . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'menu.yaml';
+        return $this->basePath . DIRECTORY_SEPARATOR . $this->fileName;
     }
     
     public function getMenus(): array 

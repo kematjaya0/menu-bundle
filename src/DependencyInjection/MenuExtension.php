@@ -23,5 +23,9 @@ class MenuExtension extends Extension
     {
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'Resources/config'));
         $loader->load('services.yml');
+        
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+        $container->setParameter($this->getAlias(), $config);
     }
 }
