@@ -6,6 +6,7 @@
 
 namespace Kematjaya\MenuBundle\Credential;
 
+use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
@@ -30,10 +31,17 @@ class RouteCredential implements RouteCredentialInterface
      */
     private $tokenStorage;
     
-    public function __construct(TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder) 
+    /**
+     * 
+     * @var CustomMenuRoleBuilderInterface
+     */
+    private $customMenuRoleBuilder;
+    
+    public function __construct(TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder, CustomMenuRoleBuilderInterface $customMenuRoleBuilder) 
     {
         $this->tokenStorage = $tokenStorage;
         $this->menuBuilder = $menuBuilder;
+        $this->customMenuRoleBuilder = $customMenuRoleBuilder;
     }
     
     public function getMenuBuilder():MenuBuilderInterface
@@ -65,7 +73,20 @@ class RouteCredential implements RouteCredentialInterface
             return false;
         }
         
-        return in_array($this->getSingleRole($user), $menu['role']);
+        $isAllowed = in_array($this->getSingleRole($user), $menu['role']);
+        $customMenuRoles = $this->customMenuRoleBuilder->getMenuRoles($routeName);
+        if ($customMenuRoles->isEmpty()) {
+            return $isAllowed;
+        }
+        
+        foreach ($customMenuRoles as $customMenuRole) {
+            if (!$customMenuRole->isAllowed($routeName, $menu)) {
+                
+                return false;
+            }
+        }
+        
+        return $isAllowed;
     }
 
     protected function getSingleRole(UserInterface $user):?string

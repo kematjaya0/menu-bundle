@@ -32,3 +32,6 @@ services:
     Kematjaya\MenuBundle\Controller\AccessControlController:
         calls: 
             - setContainer: ['@service_container']
+            
+    Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface:
+        class: Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilder

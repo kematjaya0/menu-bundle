@@ -6,6 +6,8 @@
 
 namespace Kematjaya\MenuBundle;
 
+use Kematjaya\MenuBundle\Menu\CustomMenuRoleInterface;
+use Kematjaya\MenuBundle\CompilerPass\CustomMenuRoleCompilerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -15,5 +17,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class MenuBundle extends Bundle
 {
-    
+    public function build(ContainerBuilder $container) 
+    {
+        $container->registerForAutoconfiguration(CustomMenuRoleInterface::class)
+                ->addTag(CustomMenuRoleInterface::TAG_NAME);
+        
+        $container->addCompilerPass(new CustomMenuRoleCompilerPass());
+        
+        parent::build($container);
+    }
 }
