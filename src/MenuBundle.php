@@ -9,6 +9,7 @@ namespace Kematjaya\MenuBundle;
 use Kematjaya\MenuBundle\Menu\CustomMenuRoleInterface;
 use Kematjaya\MenuBundle\CompilerPass\CustomMenuRoleCompilerPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * @package Kematjaya\MenuBundle
