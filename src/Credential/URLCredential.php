@@ -6,6 +6,7 @@
 
 namespace Kematjaya\MenuBundle\Credential;
 
+use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Kematjaya\URLBundle\Factory\RoutingFactoryInterface;
@@ -23,11 +24,10 @@ class URLCredential extends RouteCredential
      */
     private $routingFactory;
     
-    public function __construct(RoutingFactoryInterface $routingFactory, TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder) 
+    public function __construct(RoutingFactoryInterface $routingFactory, TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder, CustomMenuRoleBuilderInterface $customMenuRoleBuilder) 
     {
         $this->routingFactory = $routingFactory;
-        
-        parent::__construct($tokenStorage, $menuBuilder);
+        parent::__construct($tokenStorage, $menuBuilder, $customMenuRoleBuilder);
     }
     
     public function isAllowed(string $routeName): bool
