@@ -6,7 +6,6 @@
 
 namespace Kematjaya\MenuBundle\Controller;
 
-use Kematjaya\Breadcrumb\Lib\Builder as BreadcrumbBuilder;
 use Kematjaya\UserBundle\Entity\KmjUserInterface;
 use Kematjaya\URLBundle\Type\AccessControlType;
 use Kematjaya\URLBundle\Repository\URLRepositoryInterface;
@@ -22,21 +21,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AccessControlController extends AbstractController 
 {
-    public function index(RoleHierarchyInterface $roleHierarchy, BreadcrumbBuilder $builder): Response
+    public function index(RoleHierarchyInterface $roleHierarchy): Response
     {
-        $builder->add('access_control');
-        
         return $this->render('@Menu/access_control/index.html.twig', [
             'roles' => $this->getRoles($roleHierarchy)
         ]);
     }
     
-    public function show(Request $request, string $role, BreadcrumbBuilder $builder, URLRepositoryInterface $URLRepository)
+    public function show(Request $request, string $role, URLRepositoryInterface $URLRepository)
     {
-        $builder->add('access_control', 'kmj_menu_access_control_index');
-        $builder->add('show');
-        $builder->add($role);
-        
         $form = $this->createForm(AccessControlType::class, null, [
             'role' => $role
         ]);
