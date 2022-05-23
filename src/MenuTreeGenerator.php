@@ -6,8 +6,6 @@
 
 namespace Kematjaya\MenuBundle;
 
-use Kematjaya\MenuBundle\Menu\Group;
-use Kematjaya\MenuBundle\Menu\Menu;
 use Kematjaya\MenuBundle\Parser\DefaultMenuParser;
 use Kematjaya\MenuBundle\Credential\RouteCredentialInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;

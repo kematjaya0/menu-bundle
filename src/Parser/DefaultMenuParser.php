@@ -9,6 +9,7 @@ namespace Kematjaya\MenuBundle\Parser;
 
 use Kematjaya\MenuBundle\Menu\Menu;
 use Kematjaya\MenuBundle\Menu\Group;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Description of DefaultMenuParser
@@ -17,11 +18,23 @@ use Kematjaya\MenuBundle\Menu\Group;
  */
 class DefaultMenuParser implements MenuParserInterface 
 {
+    /**
+     * 
+     * @var UrlGeneratorInterface
+     */
+    private $urlGenerator;
+    
+    public function __construct(UrlGeneratorInterface $urlGenerator) 
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+    
     public function parse(array $menus): Menu
     {
-        $menu = (new Menu($menus['route']))
+        $url = $this->urlGenerator->generate($menus['route'], $menus['params'] ?? []);
+        $menu = (new Menu($url))
                 ->setLabel($menus['label'])
-                ->setPath($menus['route']);
+                ->setPath($url);
         if (isset($menus['role'])) {
             $menu->setRoles($menus['role']);
         }
@@ -35,8 +48,14 @@ class DefaultMenuParser implements MenuParserInterface
 
     public function createGroup(string $name, string $path = null, string $icon = null): Group 
     {
+        try {
+            $url = (null !== $path) ? $this->urlGenerator->generate($path) : null;
+        } catch (\Exception $ex) {
+            $url = null;
+        }
+        
         return (new Group($name))
-                ->setPath($path)
+                ->setPath($url)
                 ->setIcon($icon);
     }
 
