@@ -22,20 +22,11 @@ class MenuBundleTest extends WebTestCase
         return AppKernelTest::class;
     }
     
-    public function testInstanceClass():ContainerInterface
+    public function testInstanceTwig(): Environment
     {
         $client = parent::createClient();
         $container = $client->getContainer();
-        $this->assertInstanceOf(ContainerInterface::class, $container);
         
-        return $container;
-    }
-    
-    /**
-     * @depends testInstanceClass
-     */
-    public function testInstanceTwig(ContainerInterface $container): Environment
-    {
         $this->assertTrue($container->has('twig'));
         
         return $container->get('twig');

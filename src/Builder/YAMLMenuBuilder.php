@@ -49,8 +49,8 @@ class YAMLMenuBuilder implements MenuBuilderInterface
             
             return [];
         }
-        
         $menus = $this->getMenus();
+        
         return $menus[$routeName];
     }
     
@@ -61,7 +61,6 @@ class YAMLMenuBuilder implements MenuBuilderInterface
     
     public function getMenus(): array 
     {
-        $filesystem = new Filesystem();
         if (!file_exists($this->getFilePath())) {
             $this->dump([]);
         }
@@ -72,9 +71,7 @@ class YAMLMenuBuilder implements MenuBuilderInterface
     public function dump(array $routes = []):void
     {
         $string = Yaml::dump($routes);
-        
         $filesystem = new Filesystem();
-        
         $filesystem->dumpFile($this->getFilePath(), $string);
     }
 }

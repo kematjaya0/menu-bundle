@@ -4,9 +4,21 @@ services:
         autoconfigure: true
         public: true
         
+    Symfony\Contracts\Translation\TranslatorInterface:
+        class: Kematjaya\MenuBundle\Tests\Util\Translator
+#        
+    Symfony\Component\Security\Csrf\CsrfTokenManagerInterface:
+        class: Kematjaya\MenuBundle\Tests\Util\CsrfTokenManager
+        
     Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface:
-        class: Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage
-            
+        class: Kematjaya\MenuBundle\Tests\Util\TokenStorage
+#        
+    Symfony\Component\Security\Core\Security:
+        class: Symfony\Component\Security\Core\Security
+        
+    Symfony\Component\Security\Core\Role\RoleHierarchyInterface:
+        class: Kematjaya\MenuBundle\Tests\Util\RoleHierarchy
+        
     Symfony\Component\Routing\RouterInterface:
         class: Kematjaya\MenuBundle\Tests\Util\Router
         

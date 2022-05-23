@@ -35,3 +35,8 @@ services:
             
     Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface:
         class: Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilder
+        
+    Kematjaya\MenuBundle\Builder\MenuParserBuilderInterface:
+        class: Kematjaya\MenuBundle\Builder\MenuParserBuilder
+        
+    Kematjaya\MenuBundle\Parser\DefaultMenuParser: ~

@@ -3,6 +3,7 @@
 namespace Kematjaya\MenuBundle\Tests;
 
 use Kematjaya\MenuBundle\MenuBundle;
+use Kematjaya\URLBundle\URLBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\HttpKernel\Kernel;
@@ -18,6 +19,7 @@ class AppKernelTest extends Kernel
     {
         return [
             new MenuBundle(),
+            new URLBundle(),
             new TwigBundle(),
             new FrameworkBundle()
             
@@ -29,7 +31,6 @@ class AppKernelTest extends Kernel
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             $loader->load(__DIR__ . DIRECTORY_SEPARATOR . 'config/config.yml');
             $loader->load(__DIR__ . DIRECTORY_SEPARATOR . 'config/services_test.yml');
-            $loader->load(__DIR__ . DIRECTORY_SEPARATOR . 'config/bundle.yml');
             
             $container->addObjectResource($this);
         });

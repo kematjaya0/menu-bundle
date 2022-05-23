@@ -1,15 +1,17 @@
 <?php
 
 /**
- * This file is part of the helpdesk.
+ * This file is part of the kematjaya/menu-bundle.
  */
 
 namespace Kematjaya\MenuBundle;
 
 use Kematjaya\MenuBundle\Menu\Group;
 use Kematjaya\MenuBundle\Menu\Menu;
+use Kematjaya\MenuBundle\Parser\DefaultMenuParser;
 use Kematjaya\MenuBundle\Credential\RouteCredentialInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
+use Kematjaya\MenuBundle\Builder\MenuParserBuilderInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -39,12 +41,21 @@ class MenuTreeGenerator
      */
     private $menus;
     
-    const GROUP_DEFAULT = 'default';
+    /**
+     * 
+     * @var MenuParserBuilderInterface
+     */
+    private $menuParserBuilder;
     
-    public function __construct(MenuBuilderInterface $menuBuilder, RouteCredentialInterface $routeCredential) 
+    const GROUP_DEFAULT = 'default';
+    const KEY_PARSER    = 'parser';
+    const KEY_ROUTE     = 'route';
+    
+    public function __construct(MenuBuilderInterface $menuBuilder, MenuParserBuilderInterface $menuParserBuilder, RouteCredentialInterface $routeCredential) 
     {
         $this->menuBuilder = $menuBuilder;
         $this->routeCredential = $routeCredential;
+        $this->menuParserBuilder = $menuParserBuilder;
         $this->menus = new ArrayCollection();
     }
     
@@ -56,59 +67,25 @@ class MenuTreeGenerator
                 continue;
             }
             
+            $parser = $this->menuParserBuilder->getParser(
+                isset($menu[self::KEY_PARSER]) ? $menu[self::KEY_PARSER] : DefaultMenuParser::class
+            );
+            
+            
             $groupName = isset($menu['group']) ? $menu['group'] : self::GROUP_DEFAULT;
-            $group = $this->createGroup($groupName, $k, $menu['icon']);
+            $group = $parser->createGroup($groupName, $k, $menu['icon']);
             if (isset($menu['icon_group']) and $menu['icon_group']) {
                 $group->setIcon($menu['icon']);
             }
             
-            $menu['route'] = $k;
-            $this->createMenu($group, $menu);
+            $menu[self::KEY_ROUTE] = isset($menu[self::KEY_ROUTE]) ? $menu[self::KEY_ROUTE] : $k;
+            $group->addChild(
+                $parser->parse($menu)
+            );
+            
             $this->menus->offsetSet($group->getName(), $group);
         }
         //dump($this->menus);exit;
         return $this->menus;
-    }
-    
-    /**
-     * 
-     * @param string $name
-     * @param string $path
-     * @param string $icon
-     * @return Group
-     */
-    protected function createGroup(string $name, string $path = null, string $icon = null):Group
-    {
-        if (!$this->menus->offsetExists($name)) {
-            $group = (new Group($name))
-                ->setPath($path)
-                ->setIcon($icon);
-            
-            $this->menus->offsetSet($name, $group);
-        }
-        
-        return $this->menus->offsetGet($name);
-    }
-    
-    /**
-     * 
-     * @param array $menu
-     * @return Menu
-     */
-    protected function createMenu(Group $group, array $menus):Menu
-    {
-        $menu = (new Menu($menus['route']))
-                ->setLabel($menus['label'])
-                ->setPath($menus['route']);
-        if(isset($menus['role'])) {
-            $menu->setRoles($menus['role']);
-        }
-        if(isset($menus['icon'])) {
-            $menu->setIcon($menus['icon']);
-        }
-            
-        $group->addChild($menu);
-        
-        return $menu;
     }
 }
