@@ -71,10 +71,10 @@ class MenuTreeGenerator
             
             
             $groupName = isset($menu['group']) ? $menu['group'] : self::GROUP_DEFAULT;
-            $group = $parser->createGroup($groupName, $k, $menu['icon']);
-            if (isset($menu['icon_group']) and $menu['icon_group']) {
-                $group->setIcon($menu['icon']);
-            }
+            $group = $this->menus->offsetGet($groupName) ?? null;
+            if (null === $group) {
+                $group = $parser->createGroup($groupName, $k, $menu['icon_group'] ?? $menu['icon']);
+            }   
             
             $menu[self::KEY_ROUTE] = isset($menu[self::KEY_ROUTE]) ? $menu[self::KEY_ROUTE] : $k;
             $group->addChild(
@@ -83,7 +83,7 @@ class MenuTreeGenerator
             
             $this->menus->offsetSet($group->getName(), $group);
         }
-        //dump($this->menus);exit;
+        
         return $this->menus;
     }
 }
