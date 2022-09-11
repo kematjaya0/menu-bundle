@@ -18,9 +18,9 @@ use Twig\Environment;
  */
 class MenuExtension extends AbstractExtension
 {
-    private $twig;
+    private Environment $twig;
     
-    private $generator;
+    private MenuTreeGenerator $generator;
     
     public function __construct(Environment $twig, MenuTreeGenerator $generator) 
     {
@@ -28,14 +28,14 @@ class MenuExtension extends AbstractExtension
         $this->generator = $generator;
     }
     
-    public function getFunctions()
+    public function getFunctions():array
     {
         return [
             new TwigFunction('kmj_menu',[$this, 'render'], ['is_safe' => ['html']])
         ];
     }
     
-    public function render():string
+    public function render():?string
     {
         return $this->twig->render('@Menu/render_menu.html.twig', [
             'menus' => $this->generator->generate(),
