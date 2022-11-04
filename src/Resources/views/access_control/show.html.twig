@@ -20,7 +20,7 @@
             {% for k, row in form %}
             {% if k not in skip %}
             <tr>
-                <th width="30%">{{ k|trans }}</th>
+                <th width="30%">{{ k|replace({'app_':''})|trans }}</th>
                 <td>
                     {% for name, access_form in row %}
                         {% for n, access in access_form %}

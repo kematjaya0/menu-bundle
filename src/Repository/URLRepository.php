@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the kematjaya_menu-bundle.
- */
-
 namespace Kematjaya\MenuBundle\Repository;
 
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
@@ -34,9 +30,6 @@ class URLRepository extends BaseRepository
         $routers = parent::findAll($role);
         foreach ($this->getMenuWithRoles() as $routeName => $value) {
             $key = str_replace('_index', '', $routeName);
-            if (!isset($routers[$key])) {
-                continue;
-            }
             
             $routers[$key][$routeName] = in_array($role, $value['role']);
         }
