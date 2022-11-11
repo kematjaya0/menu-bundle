@@ -49,7 +49,7 @@ class URLRepository extends BaseRepository
                 continue;
             }
             
-            $menus[$routeName]['role'] = $routers[$routeName];
+            $menus[$routeName]['role'] = array_unique($routers[$routeName]);
         }
         
         $this->menuBuilder->dump($menus);
