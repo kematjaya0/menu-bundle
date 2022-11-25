@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the menu-bundle.
- */
-
 namespace Kematjaya\MenuBundle\Controller;
 
 use Kematjaya\UserBundle\Entity\KmjUserInterface;
@@ -56,15 +52,16 @@ class AccessControlController extends AbstractController
     
     protected function getRoles(RoleHierarchyInterface $roleHierarchy):array
     {
-        $roles = $roleHierarchy->getReachableRoleNames($this->getUser()->getRoles());
         $roles = array_map(function ($row) {
             
             return KmjUserInterface::ROLE_USER === $row ? null : $row;
-        }, $roles);
+        }, $roleHierarchy->getReachableRoleNames($this->getUser()->getRoles()));
         
         return array_filter($roles, function ($row) {
-            
-            return null !== $row;
+            if (null === $row) {
+                return false;
+            }
+            return !in_array($row, $this->getUser()->getRoles());
         });
     }
 }
