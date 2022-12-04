@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the helpdesk.
- */
-
 namespace Kematjaya\MenuBundle\Credential;
 
 use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
@@ -67,7 +63,7 @@ class RouteCredential implements RouteCredentialInterface
             return true;
         }
         
-        $user = $this->tokenStorage->getToken()->getUser();
+        $user = null !== $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser():null;
         if (!$user instanceof UserInterface) {
             
             return false;
