@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the kematjaya/menu-bundle.
- */
-
 namespace Kematjaya\MenuBundle;
 
 use Kematjaya\MenuBundle\Parser\DefaultMenuParser;

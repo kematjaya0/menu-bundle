@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace Kematjaya\MenuBundle\CompilerPass;
 
 use Kematjaya\MenuBundle\Builder\MenuParserBuilderInterface;
@@ -16,7 +11,7 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Description of MenuParserCompilerPass
  *
- * @author programmer
+ * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
 class MenuParserCompilerPass implements CompilerPassInterface
 {

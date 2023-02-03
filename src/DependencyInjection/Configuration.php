@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace Kematjaya\MenuBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -13,11 +8,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * Description of Configuration
  *
- * @author guest
+ * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
 class Configuration implements ConfigurationInterface
 {
-    //put your code here
+    
     public function getConfigTreeBuilder(): TreeBuilder 
     {
         $builder = new TreeBuilder('menu');
@@ -25,6 +20,7 @@ class Configuration implements ConfigurationInterface
                 ->children()
                     ->scalarNode('resources_dir')->defaultValue('%kernel.project_dir%/resources')->end()
                     ->scalarNode('resources_file')->defaultValue('menu.yaml')->end()
+                    ->scalarNode("redirect_path_on_exception")->defaultValue(null)->end()
                 ->end();
         
         return $builder;

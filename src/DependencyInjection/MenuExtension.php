@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the metronic-bundle.
- */
-
 namespace Kematjaya\MenuBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Extension\Extension;

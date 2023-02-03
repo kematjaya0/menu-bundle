@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace Kematjaya\MenuBundle\Builder;
 
 use Kematjaya\MenuBundle\Parser\MenuParserInterface;
@@ -13,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Description of MenuParserBuilder
  *
- * @author programmer
+ * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
 class MenuParserBuilder implements MenuParserBuilderInterface 
 {

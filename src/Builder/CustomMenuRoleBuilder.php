@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace Kematjaya\MenuBundle\Builder;
 
 use Kematjaya\MenuBundle\Menu\CustomMenuRoleInterface;
@@ -14,7 +9,7 @@ use Doctrine\Common\Collections\Collection;
 /**
  * Description of CustomMenuRoleBuilder
  *
- * @author guest
+ * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
 class CustomMenuRoleBuilder implements CustomMenuRoleBuilderInterface 
 {

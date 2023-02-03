@@ -1,10 +1,5 @@
 <?php
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/PHPClass.php to edit this template
- */
-
 namespace Kematjaya\MenuBundle\Parser;
 
 use Kematjaya\MenuBundle\Menu\Menu;
@@ -14,7 +9,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Description of DefaultMenuParser
  *
- * @author programmer
+ * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
 class DefaultMenuParser implements MenuParserInterface 
 {
