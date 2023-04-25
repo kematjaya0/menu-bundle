@@ -14,6 +14,9 @@
     
     {{ form_start(form) }}
     
+    <p>
+        <input type="checkbox" id="checkall"/> {{ "check_all"|trans }}
+    </p>
     <table class="table table-bordered table-hover">
         <tbody>
             {% set skip = ['_token', 'role'] %}
@@ -24,7 +27,7 @@
                 <td>
                     {% for name, access_form in row %}
                         {% for n, access in access_form %}
-                            {{ form_widget(access, {attr: {'style': 'width: fit-content;display: inline'}}) }}
+                            {{ form_widget(access, {attr: {class: "access-control",'style': 'width: fit-content;display: inline'}}) }}
                         {% endfor %}
                     {% endfor %}
                 </td>
@@ -46,3 +49,15 @@
     
 {% endblock %} 
     
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(function () {
+            $("#checkall").click(function () {
+                $(".access-control").prop("checked", $(this).is(":checked"));
+                $.uniform.update($(".access-control"));
+            });
+            
+        });
+    </script>
+{% endblock %}

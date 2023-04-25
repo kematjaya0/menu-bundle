@@ -2,6 +2,7 @@
     "name": "kematjaya/menu-bundle",
     "type": "library",
     "license": "MIT",
+    "description": "menu management",
     "authors": [
         {
             "name": "Nur Hidayatullah",
@@ -9,18 +10,18 @@
         }
     ],
     "require": {
-        "symfony/dependency-injection": "^4.0|^5.0",
-        "symfony/config": "^4.0|^5.0",
-        "symfony/framework-bundle": "^4.0|^5.0",
-        "symfony/yaml": "^4.0|^5.0",
-        "symfony/twig-bundle": "^4.0|^5.0",
-        "symfony/security-core": "^5.3",
+        "symfony/dependency-injection": "^4.0|^5.0|^6.0",
+        "symfony/config": "^4.0|^5.0|^6.0",
+        "symfony/framework-bundle": "^4.0|^5.0|^6.0",
+        "symfony/yaml": "^4.0|^5.0|^6.0",
+        "symfony/twig-bundle": "^4.0|^5.0|^6.0",
+        "symfony/security-core": "^5.3|^6.0",
         "kematjaya/url-bundle": "^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.4",
-        "symfony/var-dumper": "^4.0|^5.0",
-        "symfony/browser-kit": "^4.0|^5.0"
+        "symfony/var-dumper": "^4.0|^5.0|^6.0",
+        "symfony/browser-kit": "^4.0|^5.0|^6.0"
     },
     "autoload": {
         "psr-4": {
