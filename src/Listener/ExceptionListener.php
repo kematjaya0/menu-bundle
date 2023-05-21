@@ -2,6 +2,7 @@
 
 namespace Kematjaya\MenuBundle\Listener;
 
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Twig\Environment;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +36,12 @@ class ExceptionListener
     {
         $exception = $event->getThrowable();
         $configs = $this->bag->get("menu");
-        $session = $event->getRequest()->getSession();
+        try {
+            $session = $event->getRequest()->getSession();
+        } catch (SessionNotFoundException $e) {
+            return;
+        }
+
         if ($exception instanceof AccessDeniedHttpException) {
             if (null !== $configs["redirect_path_on_exception"] && null !== $session) {
                 $response = new RedirectResponse(
