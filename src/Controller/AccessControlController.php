@@ -2,6 +2,7 @@
 
 namespace Kematjaya\MenuBundle\Controller;
 
+use Kematjaya\MenuBundle\MenuTreeGenerator;
 use Kematjaya\UserBundle\Entity\KmjUserInterface;
 use Kematjaya\URLBundle\Type\AccessControlType;
 use Kematjaya\URLBundle\Repository\URLRepositoryInterface;
@@ -15,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  * @license https://opensource.org/licenses/MIT MIT
  * @author  Nur Hidayatullah <kematjaya0@gmail.com>
  */
-class AccessControlController extends AbstractController 
+class AccessControlController extends AbstractController
 {
     public function index(RoleHierarchyInterface $roleHierarchy): Response
     {
@@ -23,8 +24,8 @@ class AccessControlController extends AbstractController
             'roles' => $this->getRoles($roleHierarchy)
         ]);
     }
-    
-    public function show(Request $request, string $role, URLRepositoryInterface $URLRepository)
+
+    public function show(Request $request, string $role, URLRepositoryInterface $URLRepository, MenuTreeGenerator $generator)
     {
         $form = $this->createForm(AccessControlType::class, null, [
             'role' => $role
@@ -33,30 +34,31 @@ class AccessControlController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() and $form->isValid()) {
             try {
-                
+
                 $URLRepository->save($form->getData());
-                
+
                 $this->addFlash('info', 'update berhasil.');
-                
+
                 return $this->redirectToRoute('kmj_menu_access_control_show', ['role' => $role]);
             } catch (\Exception $ex) {
                 $this->addFlash('error', $ex->getMessage());
             }
         }
-        
+
         return $this->render('@Menu/access_control/show.html.twig', [
             'role' => $role,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            "groups" => $generator->getGroupTree()
         ]);
     }
-    
+
     protected function getRoles(RoleHierarchyInterface $roleHierarchy):array
     {
         $roles = array_map(function ($row) {
-            
+
             return KmjUserInterface::ROLE_USER === $row ? null : $row;
         }, $roleHierarchy->getReachableRoleNames($this->getUser()->getRoles()));
-        
+
         return array_filter($roles, function ($row) {
             if (null === $row) {
                 return false;

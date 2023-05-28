@@ -19,21 +19,34 @@
     </p>
     <table class="table table-bordered table-hover">
         <tbody>
-            {% set skip = ['_token', 'role'] %}
-            {% for k, row in form %}
-            {% if k not in skip %}
-            <tr>
-                <th width="30%">{{ k|replace({'app_':''})|trans }}</th>
-                <td>
-                    {% for name, access_form in row %}
-                        {% for n, access in access_form %}
-                            {{ form_widget(access, {attr: {class: "access-control",'style': 'width: fit-content;display: inline'}}) }}
-                        {% endfor %}
-                    {% endfor %}
-                </td>
+        {% set skip = ['_token', 'role'] %}
+        {% for groupName, group in groups %}
+            <tr style="background-color: #eaeaea">
+                <th colspan="2"> <input type="checkbox" onclick="checkallgroup(this,'{{ groupName }}')"/> {{ groupName|trans|upper }}</th>
             </tr>
-            {% endif %}
+            {% for k, row in form %}
+                {% if k not in skip and group.contains(k) %}
+                    <tr>
+                        <th style="width:30%">
+                            <p>
+                                <input type="checkbox" onclick="checkallgroup(this,'{{ k }}')"/> {{ k|trans }}
+                            </p>
+                        </th>
+                        <td>
+                            {% for name, access_form in row %}
+                                <div class="row">
+                                    {% for n, access in access_form %}
+                                        <div class="col-lg-3">
+                                            {{ form_widget(access, {attr: {class: "access-control " ~ k ~ " " ~ groupName, style: 'width: fit-content;display: inline'}}) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
         
@@ -57,7 +70,11 @@
                 $(".access-control").prop("checked", $(this).is(":checked"));
                 $.uniform.update($(".access-control"));
             });
-            
         });
+
+        function checkallgroup(obj, group) {
+            $("." + group).prop("checked", $(obj).is(":checked"));
+            $.uniform.update($("." + group));
+        }
     </script>
 {% endblock %}

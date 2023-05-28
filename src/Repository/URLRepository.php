@@ -43,7 +43,7 @@ class URLRepository extends BaseRepository
             $result[$key][$routeName] = in_array($role, $value['role']);
         }
 
-        return $result;
+        return $this->filterIdenticalPath($result);;
     }
 
     public function save(array $routers): void
@@ -75,6 +75,39 @@ class URLRepository extends BaseRepository
         $this->menuBuilder->dump($menus);
 
         parent::save($routers);
+    }
+
+    protected function filterIdenticalPath(array $routes):array
+    {
+        array_walk($routes, function (&$value, $k) use ($routes) {
+            $compared = array_filter($routes, function ($row) use ($value) {
+                if ($row == $value) {
+                    return false;
+                }
+
+                $diff = array_diff(array_keys($row), array_keys($value));
+
+                return count($diff) !== count($row);
+            });
+
+            if (empty($compared)) {
+                return;
+            }
+
+            foreach (array_values($compared) as $compare) {
+                foreach (array_keys($compare) as $key) {
+                    if ($k === $key) {
+                        continue;
+                    }
+                    if (preg_match("/^".$k."_/i", $key)) {
+                        continue;
+                    }
+                    unset($value[$key]);
+                }
+            }
+        });
+
+        return $routes;
     }
 
     protected function getMenuWithRoles():array
