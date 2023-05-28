@@ -17,32 +17,36 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class URLRepository extends BaseRepository
 {
     private MenuBuilderInterface $menuBuilder;
-    
+
     private RoleHierarchyInterface $roleHierarchy;
-    
+
     private Security $security;
-    
-    public function __construct(Security $security, RoleHierarchyInterface $roleHierarchy, MenuBuilderInterface $menuBuilder, RoutingSourceInterface $routingSource) 
+
+    public function __construct(Security $security, RoleHierarchyInterface $roleHierarchy, MenuBuilderInterface $menuBuilder, RoutingSourceInterface $routingSource)
     {
         $this->security = $security;
         $this->menuBuilder = $menuBuilder;
         $this->roleHierarchy = $roleHierarchy;
         parent::__construct($routingSource);
     }
-    
+
     public function findAll(string $role):array
     {
         $routers = parent::findAll($role);
+        $result = [];
         foreach ($this->getMenuWithRoles() as $routeName => $value) {
             $key = str_replace('_index', '', $routeName);
-            
-            $routers[$key][$routeName] = in_array($role, $value['role']);
+            if (!isset($result[$key])) {
+                $result[$key] = isset($routers[$key]) ? $routers[$key] : [];
+            }
+
+            $result[$key][$routeName] = in_array($role, $value['role']);
         }
-        
-        return $routers;
+
+        return $result;
     }
-    
-    public function save(array $routers): void 
+
+    public function save(array $routers): void
     {
         $menus = $this->menuBuilder->getMenus();
         $user = $this->security->getUser();
@@ -54,30 +58,30 @@ class URLRepository extends BaseRepository
             if (!isset($routers[$routeName])) {
                 continue;
             }
-            
+
             if (!isset($value['role'])) {
                 continue;
             }
-            
+
             $roles = array_unique($routers[$routeName]);
             $roleHierarchyExcepts = array_filter($value['role'], function (string $role) use ($roles, $roleHierarchy) {
-                
+
                 return !in_array($role, $roles) && !in_array($role, $roleHierarchy);
             });
-            
+
             $menus[$routeName]['role'] = array_unique(array_merge($roles, $roleHierarchyExcepts));
         }
-        
+
         $this->menuBuilder->dump($menus);
-        
+
         parent::save($routers);
     }
-    
+
     protected function getMenuWithRoles():array
     {
         $menus = $this->menuBuilder->getMenus();
         return array_filter($menus, function ($menu) {
-            
+
             return isset($menu['role']);
         });
     }
