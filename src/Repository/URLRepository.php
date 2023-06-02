@@ -64,12 +64,17 @@ class URLRepository extends BaseRepository
             }
 
             $roles = array_unique($routers[$routeName]);
-            $roleHierarchyExcepts = array_filter($value['role'], function (string $role) use ($roles, $roleHierarchy) {
+            $diffRoles = array_diff($value['role'],$roles);
+            $roleHierarchyExcepts = array_filter($diffRoles, function (string $role) use ($user, $roleHierarchy) {
+                if (in_array($role, $roleHierarchy) && in_array($role, $user->getRoles())) {
+                    return true;
+                }
 
-                return !in_array($role, $roles) && !in_array($role, $roleHierarchy);
+                return !in_array($role, $roleHierarchy);
             });
 
             $menus[$routeName]['role'] = array_unique(array_merge($roles, $roleHierarchyExcepts));
+            $routers[$routeName] = $menus[$routeName]['role'];
         }
 
         $this->menuBuilder->dump($menus);
