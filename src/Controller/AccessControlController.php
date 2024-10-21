@@ -3,9 +3,9 @@
 namespace Kematjaya\MenuBundle\Controller;
 
 use Kematjaya\MenuBundle\MenuTreeGenerator;
-use Kematjaya\UserBundle\Entity\KmjUserInterface;
 use Kematjaya\URLBundle\Type\AccessControlType;
 use Kematjaya\URLBundle\Repository\URLRepositoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
@@ -18,6 +18,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AccessControlController extends AbstractController
 {
+    private Security $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     public function index(RoleHierarchyInterface $roleHierarchy): Response
     {
         return $this->render('@Menu/access_control/index.html.twig', [
@@ -56,14 +62,14 @@ class AccessControlController extends AbstractController
     {
         $roles = array_map(function ($row) {
 
-            return KmjUserInterface::ROLE_USER === $row ? null : $row;
-        }, $roleHierarchy->getReachableRoleNames($this->getUser()->getRoles()));
+            return "ROLE_USER" === $row ? null : $row;
+        }, $roleHierarchy->getReachableRoleNames($this->security->getUser()->getRoles()));
 
         return array_filter($roles, function ($row) {
             if (null === $row) {
                 return false;
             }
-            return !in_array($row, $this->getUser()->getRoles());
+            return !in_array($row, $this->security->getUser()->getRoles());
         });
     }
 }

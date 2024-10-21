@@ -26,12 +26,10 @@ services:
         tags: ['twig.extension']
         
     Kematjaya\MenuBundle\Controller\SecurityController:
-        calls: 
-            - setContainer: ['@service_container']
+        tags: ['controller.service_arguments']
             
     Kematjaya\MenuBundle\Controller\AccessControlController:
-        calls: 
-            - setContainer: ['@service_container']
+        tags: ['controller.service_arguments']
             
     Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface:
         class: Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilder
