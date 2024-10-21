@@ -18,7 +18,7 @@ class TokenStorage implements TokenStorageInterface
 {
     private $token;
     
-    public function getToken() 
+    public function getToken() :?TokenInterface
     {
         return $this->token;
     }

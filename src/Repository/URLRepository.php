@@ -5,8 +5,8 @@ namespace Kematjaya\MenuBundle\Repository;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
 use Kematjaya\URLBundle\Source\RoutingSourceInterface;
 use Kematjaya\URLBundle\Repository\URLRepository as BaseRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**

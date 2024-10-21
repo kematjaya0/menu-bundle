@@ -21,4 +21,8 @@ class Translator implements TranslatorInterface
         return $id;
     }
 
+    public function getLocale(): string
+    {
+        return "EN";
+    }
 }

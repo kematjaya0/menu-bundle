@@ -5,6 +5,7 @@ namespace Kematjaya\MenuBundle\Tests;
 use Kematjaya\MenuBundle\MenuBundle;
 use Kematjaya\URLBundle\URLBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -15,13 +16,14 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class AppKernelTest extends Kernel
 {
-    public function registerBundles()
+    public function registerBundles():\Traversable | array
     {
         return [
             new MenuBundle(),
             new URLBundle(),
             new TwigBundle(),
-            new FrameworkBundle()
+            new FrameworkBundle(),
+            new SecurityBundle()
             
         ];
     }

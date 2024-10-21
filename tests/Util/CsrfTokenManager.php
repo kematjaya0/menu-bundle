@@ -32,7 +32,7 @@ class CsrfTokenManager implements CsrfTokenManagerInterface
         return new CsrfToken($tokenId);
     }
 
-    public function removeToken(string $tokenId) 
+    public function removeToken(string $tokenId): ?string
     {
         
     }

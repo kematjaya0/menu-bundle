@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class MenuBundleTest extends WebTestCase
 {
-    public static function getKernelClass() 
+    public static function getKernelClass() :string
     {
         return AppKernelTest::class;
     }
