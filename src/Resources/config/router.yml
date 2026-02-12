@@ -1,0 +1,12 @@
+kmj_access_denied:
+    path: /access-denied.xhtml
+    methods: GET
+    controller: Kematjaya\MenuBundle\Controller\SecurityController::accessDenied
+kmj_menu_access_control_index:
+    path: /access-control.xhtml
+    methods: ["GET","POST"]
+    controller: Kematjaya\MenuBundle\Controller\AccessControlController::index
+kmj_menu_access_control_show:
+    path: /access-control/{role}/show.xhtml
+    methods: ["GET","POST"]
+    controller: Kematjaya\MenuBundle\Controller\AccessControlController::show
