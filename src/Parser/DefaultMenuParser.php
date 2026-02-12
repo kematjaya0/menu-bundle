@@ -19,7 +19,7 @@ class DefaultMenuParser implements MenuParserInterface
      */
     private $urlGenerator;
     
-    public function __construct(UrlGeneratorInterface $urlGenerator) 
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
     }
@@ -41,14 +41,25 @@ class DefaultMenuParser implements MenuParserInterface
         return $menu;
     }
 
-    public function createGroup(string $name, string $path = null, string $icon = null): Group 
+    /**
+     * Creates a new group.
+     *
+     * @param string $name The group name
+     * @param string|null $path The path to generate the group URL
+     * @param string|null $icon The icon for the group
+     *
+     * @return Group The created group
+     *
+     * @throws \Exception If the path generation fails
+     */
+    public function createGroup(string $name, ?string $path = null, ?string $icon = null): Group
     {
         try {
             $url = (null !== $path) ? $this->urlGenerator->generate($path) : null;
         } catch (\Exception $ex) {
-            $url = null;
+            throw new \InvalidArgumentException(sprintf('Invalid path "%s" for group "%s"', $path ?? '<null>', $name), 0, $ex);
         }
-        
+
         return (new Group($name))
                 ->setPath($url)
                 ->setIcon($icon);

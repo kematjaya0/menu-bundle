@@ -16,7 +16,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class Translator implements TranslatorInterface 
 {
     
-    public function trans(string $id, array $parameters = array(), string $domain = null, string $locale = null): string 
+    /**
+     * Translates a message.
+     *
+     * @param string $id The message id (may also be an object that can be converted to a string)
+     * @param array<string, mixed> $parameters An array of parameters to replace in the message
+     * @param string|null $domain The domain for the message or null to use the default domain
+     * @param string|null $locale The locale for the message or null to use the default locale
+     * @return string The translated message
+     */
+    public function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         return $id;
     }

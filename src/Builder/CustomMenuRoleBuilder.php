@@ -13,11 +13,7 @@ use Doctrine\Common\Collections\Collection;
  */
 class CustomMenuRoleBuilder implements CustomMenuRoleBuilderInterface 
 {
-    /**
-     * 
-     * @var Collection
-     */
-    private $menuRoles;
+    private Collection $menuRoles;
     
     public function __construct() 
     {

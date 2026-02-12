@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the menu-bundle.
- */
-
 namespace Kematjaya\MenuBundle\Credential;
 
 use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
@@ -18,15 +14,9 @@ use Kematjaya\URLBundle\Factory\RoutingFactoryInterface;
  */
 class URLCredential extends RouteCredential 
 {
-    /**
-     * 
-     * @var RoutingFactoryInterface
-     */
-    private $routingFactory;
     
-    public function __construct(RoutingFactoryInterface $routingFactory, TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder, CustomMenuRoleBuilderInterface $customMenuRoleBuilder) 
+    public function __construct(private RoutingFactoryInterface $routingFactory, TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder, CustomMenuRoleBuilderInterface $customMenuRoleBuilder)
     {
-        $this->routingFactory = $routingFactory;
         parent::__construct($tokenStorage, $menuBuilder, $customMenuRoleBuilder);
     }
     

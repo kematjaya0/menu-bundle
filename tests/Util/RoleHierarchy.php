@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the url-bundle.
- */
-
 namespace Kematjaya\MenuBundle\Tests\Util;
 
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;

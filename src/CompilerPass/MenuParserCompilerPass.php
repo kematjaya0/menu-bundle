@@ -15,8 +15,13 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class MenuParserCompilerPass implements CompilerPassInterface
 {
-    //put your code here
-    public function process(ContainerBuilder $container) 
+    /**
+     * Processes the MenuParserInterface tagged services.
+     *
+     * @param ContainerBuilder<array<string, object>> $container
+     * @return void
+     */
+    public function process(ContainerBuilder $container): void
     {
         $definition = $container->findDefinition(MenuParserBuilderInterface::class);
         $taggedServices = $container->findTaggedServiceIds(MenuParserInterface::TAG_NAME);

@@ -2,6 +2,7 @@
 
 namespace Kematjaya\MenuBundle\Builder;
 
+use Doctrine\Common\Collections\Collection;
 use Kematjaya\MenuBundle\Parser\MenuParserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -12,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class MenuParserBuilder implements MenuParserBuilderInterface 
 {
-    private $elements;
+    private Collection $elements;
     
     public function __construct() 
     {

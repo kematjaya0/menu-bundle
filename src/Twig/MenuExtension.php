@@ -14,14 +14,9 @@ use Twig\Environment;
  */
 class MenuExtension extends AbstractExtension
 {
-    private Environment $twig;
     
-    private MenuTreeGenerator $generator;
-    
-    public function __construct(Environment $twig, MenuTreeGenerator $generator) 
+    public function __construct(private Environment $twig, private MenuTreeGenerator $generator)
     {
-        $this->twig = $twig;
-        $this->generator = $generator;
     }
     
     public function getFunctions():array

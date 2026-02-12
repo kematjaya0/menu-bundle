@@ -15,8 +15,11 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class CustomMenuRoleCompilerPass implements CompilerPassInterface
 {
-    //put your code here
-    public function process(ContainerBuilder $container) 
+    /**
+     * @param ContainerBuilder<int, object> $container
+     * @return void
+     */
+    public function process(ContainerBuilder $container): void
     {
         $definition = $container->findDefinition(CustomMenuRoleBuilderInterface::class);
         $taggedServices = $container->findTaggedServiceIds(CustomMenuRoleInterface::TAG_NAME);

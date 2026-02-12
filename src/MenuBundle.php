@@ -16,16 +16,23 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class MenuBundle extends Bundle
 {
-    public function build(ContainerBuilder $container) 
+    /**
+     * {@inheritDoc}
+     *
+     * @param ContainerBuilder<int, object> $container
+     *
+     * @return void
+     */
+    public function build(ContainerBuilder $container): void
     {
         $container->registerForAutoconfiguration(CustomMenuRoleInterface::class)
-                ->addTag(CustomMenuRoleInterface::TAG_NAME);
+            ->addTag(CustomMenuRoleInterface::TAG_NAME);
         $container->registerForAutoconfiguration(MenuParserInterface::class)
-                ->addTag(MenuParserInterface::TAG_NAME);
-        
+            ->addTag(MenuParserInterface::TAG_NAME);
+
         $container->addCompilerPass(new CustomMenuRoleCompilerPass());
         $container->addCompilerPass(new MenuParserCompilerPass());
-        
+
         parent::build($container);
     }
 }

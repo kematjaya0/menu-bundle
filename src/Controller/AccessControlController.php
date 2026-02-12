@@ -18,11 +18,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AccessControlController extends AbstractController
 {
-    private Security $security;
 
-    public function __construct(Security $security)
+    public function __construct(private Security $security)
     {
-        $this->security = $security;
     }
     public function index(RoleHierarchyInterface $roleHierarchy): Response
     {

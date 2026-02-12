@@ -6,7 +6,6 @@ use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
-use Kematjaya\UserBundle\Entity\DefaultUser;
 
 /**
  * @package Kematjaya\MenuBundle\Credential
@@ -15,29 +14,9 @@ use Kematjaya\UserBundle\Entity\DefaultUser;
  */
 class RouteCredential implements RouteCredentialInterface
 {
-    /**
-     * 
-     * @var MenuBuilderInterface
-     */
-    private $menuBuilder;
     
-    /**
-     * 
-     * @param TokenStorageInterface
-     */
-    private $tokenStorage;
-    
-    /**
-     * 
-     * @var CustomMenuRoleBuilderInterface
-     */
-    private $customMenuRoleBuilder;
-    
-    public function __construct(TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder, CustomMenuRoleBuilderInterface $customMenuRoleBuilder) 
+    public function __construct(private TokenStorageInterface $tokenStorage, private MenuBuilderInterface $menuBuilder, private CustomMenuRoleBuilderInterface $customMenuRoleBuilder)
     {
-        $this->tokenStorage = $tokenStorage;
-        $this->menuBuilder = $menuBuilder;
-        $this->customMenuRoleBuilder = $customMenuRoleBuilder;
     }
     
     public function getMenuBuilder():MenuBuilderInterface
@@ -87,11 +66,6 @@ class RouteCredential implements RouteCredentialInterface
 
     protected function getSingleRole(UserInterface $user):?string
     {
-        if ($user instanceof DefaultUser) {
-            
-            return $user->getSingleRole();
-        }
-        
         $userRoles = $user->getRoles();
         
         return end($userRoles);

@@ -1,9 +1,5 @@
 <?php
 
-/**
- * This file is part of the helpdesk.
- */
-
 namespace Kematjaya\MenuBundle\Menu;
 
 /**

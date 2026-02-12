@@ -19,17 +19,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class ExceptionListener 
 {
-    private Environment $twig;
     
-    private UrlGeneratorInterface $urlGenerator;
-    
-    private ParameterBagInterface $bag;
-    
-    public function __construct(Environment $twig, UrlGeneratorInterface $urlGenerator, ParameterBagInterface $bag) 
+    public function __construct(private Environment $twig, private UrlGeneratorInterface $urlGenerator, private ParameterBagInterface $bag)
     {
-        $this->twig = $twig;
-        $this->urlGenerator = $urlGenerator;
-        $this->bag = $bag;
     }
     
     public function onKernelException(ExceptionEvent $event)

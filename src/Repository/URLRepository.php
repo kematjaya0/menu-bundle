@@ -16,17 +16,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class URLRepository extends BaseRepository
 {
-    private MenuBuilderInterface $menuBuilder;
 
-    private RoleHierarchyInterface $roleHierarchy;
-
-    private Security $security;
-
-    public function __construct(Security $security, RoleHierarchyInterface $roleHierarchy, MenuBuilderInterface $menuBuilder, RoutingSourceInterface $routingSource)
+    public function __construct(private Security $security, private RoleHierarchyInterface $roleHierarchy, private MenuBuilderInterface $menuBuilder, RoutingSourceInterface $routingSource)
     {
-        $this->security = $security;
-        $this->menuBuilder = $menuBuilder;
-        $this->roleHierarchy = $roleHierarchy;
         parent::__construct($routingSource);
     }
 
@@ -51,7 +43,7 @@ class URLRepository extends BaseRepository
         $menus = $this->menuBuilder->getMenus();
         $user = $this->security->getUser();
         if (!$user instanceof UserInterface) {
-            throw new Exception("invalid user.");
+            throw new \Exception("invalid user.");
         }
         $roleHierarchy = $this->roleHierarchy->getReachableRoleNames($user->getRoles());
         foreach ($menus as $routeName => $value) {

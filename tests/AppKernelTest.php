@@ -28,7 +28,7 @@ class AppKernelTest extends Kernel
         ];
     }
     
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader):void
     {
         $loader->load(function (ContainerBuilder $container) use ($loader) {
             $loader->load(__DIR__ . DIRECTORY_SEPARATOR . 'config/config.yml');

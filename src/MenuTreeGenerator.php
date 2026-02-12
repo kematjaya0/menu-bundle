@@ -16,40 +16,14 @@ use Doctrine\Common\Collections\Collection;
  */
 class MenuTreeGenerator
 {
-
-    /**
-     *
-     * @var MenuBuilderInterface
-     */
-    private $menuBuilder;
-
-    /**
-     *
-     * @var RouteCredentialInterface
-     */
-    private $routeCredential;
-
-    /**
-     *
-     * @var Collection
-     */
-    private $menus;
-
-    /**
-     *
-     * @var MenuParserBuilderInterface
-     */
-    private $menuParserBuilder;
+    private Collection $menus;
 
     const GROUP_DEFAULT = 'default';
     const KEY_PARSER    = 'parser';
     const KEY_ROUTE     = 'route';
 
-    public function __construct(MenuBuilderInterface $menuBuilder, MenuParserBuilderInterface $menuParserBuilder, RouteCredentialInterface $routeCredential)
+    public function __construct(private MenuBuilderInterface $menuBuilder, private MenuParserBuilderInterface $menuParserBuilder, private RouteCredentialInterface $routeCredential)
     {
-        $this->menuBuilder = $menuBuilder;
-        $this->routeCredential = $routeCredential;
-        $this->menuParserBuilder = $menuParserBuilder;
         $this->menus = new ArrayCollection();
     }
 

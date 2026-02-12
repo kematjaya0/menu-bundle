@@ -14,7 +14,13 @@ interface MenuParserInterface
     
     const TAG_NAME = 'menu.parser';
     
-    public function createGroup(string $name, string $path = null, string $icon = null):Group;
+    /**
+     * @param string $name
+     * @param string|null $path
+     * @param string|null $icon
+     * @return Group
+     */
+    public function createGroup(string $name, ?string $path = null, ?string $icon = null): Group;
     
     public function parse(array $menu): Menu;
 }
