@@ -61,23 +61,30 @@ class MenuTreeGenerator
                 continue;
             }
 
-            $parser = $this->menuParserBuilder->getParser(
-                isset($menu[self::KEY_PARSER]) ? $menu[self::KEY_PARSER] : DefaultMenuParser::class
-            );
+            try {
+                $parser = $this->menuParserBuilder->getParser(
+                    isset($menu[self::KEY_PARSER]) ? $menu[self::KEY_PARSER] : DefaultMenuParser::class
+                );
 
+                $groupName = isset($menu['group']) ? $menu['group'] : self::GROUP_DEFAULT;
+                $group = $this->menus->offsetGet($groupName) ?? null;
+                if (null === $group) {
+                    $group = $parser->createGroup($groupName, $k, $menu['icon_group'] ?? $menu['icon'] ?? null);
+                }
 
-            $groupName = isset($menu['group']) ? $menu['group'] : self::GROUP_DEFAULT;
-            $group = $this->menus->offsetGet($groupName) ?? null;
-            if (null === $group) {
-                $group = $parser->createGroup($groupName, $k, $menu['icon_group'] ?? $menu['icon']);
+                $menu[self::KEY_ROUTE] = isset($menu[self::KEY_ROUTE]) ? $menu[self::KEY_ROUTE] : $k;
+                $group->addChild(
+                    $parser->parse($menu)
+                );
+
+                $this->menus->offsetSet($group->getName(), $group);
+            } catch (\Exception $ex) {
+                // a single misconfigured menu entry (missing route parameter,
+                // unknown route, ...) must not break the whole menu render.
+                trigger_error(sprintf('Skipping invalid menu entry "%s": %s', $k, $ex->getMessage()), E_USER_WARNING);
+
+                continue;
             }
-
-            $menu[self::KEY_ROUTE] = isset($menu[self::KEY_ROUTE]) ? $menu[self::KEY_ROUTE] : $k;
-            $group->addChild(
-                $parser->parse($menu)
-            );
-
-            $this->menus->offsetSet($group->getName(), $group);
         }
 
         return $this->menus;
@@ -87,11 +94,12 @@ class MenuTreeGenerator
     {
         $groups = [];
         foreach ($this->menuBuilder->getMenus() as $k => $menu) {
-            if (!isset($groups[$menu["group"]])) {
-                $groups[$menu["group"]] = new ArrayCollection();
+            $groupName = isset($menu['group']) ? $menu['group'] : self::GROUP_DEFAULT;
+            if (!isset($groups[$groupName])) {
+                $groups[$groupName] = new ArrayCollection();
             }
 
-            $groups[$menu["group"]]->add(str_replace("_index", "", $k));
+            $groups[$groupName]->add(str_replace("_index", "", $k));
         }
 
         return new ArrayCollection($groups);

@@ -6,7 +6,6 @@ use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
-use Kematjaya\UserBundle\Entity\DefaultUser;
 
 /**
  * @package Kematjaya\MenuBundle\Credential
@@ -69,7 +68,7 @@ class RouteCredential implements RouteCredentialInterface
             return false;
         }
         
-        $isAllowed = in_array($this->getSingleRole($user), $menu['role']);
+        $isAllowed = $this->hasAnyRole($user, $menu['role']);
         $customMenuRoles = $this->customMenuRoleBuilder->getMenuRoles($routeName);
         if ($customMenuRoles->isEmpty()) {
             return $isAllowed;
@@ -85,16 +84,9 @@ class RouteCredential implements RouteCredentialInterface
         return $isAllowed;
     }
 
-    protected function getSingleRole(UserInterface $user):?string
+    protected function hasAnyRole(UserInterface $user, array $roles): bool
     {
-        if ($user instanceof DefaultUser) {
-            
-            return $user->getSingleRole();
-        }
-        
-        $userRoles = $user->getRoles();
-        
-        return end($userRoles);
+        return count(array_intersect($user->getRoles(), $roles)) > 0;
     }
     
     protected function getWhiteLists():array

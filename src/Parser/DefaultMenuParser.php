@@ -26,7 +26,12 @@ class DefaultMenuParser implements MenuParserInterface
     
     public function parse(array $menus): Menu
     {
-        $url = $this->urlGenerator->generate($menus['route'], $menus['params'] ?? []);
+        try {
+            $url = $this->urlGenerator->generate($menus['route'], $menus['params'] ?? []);
+        } catch (\Exception $ex) {
+            throw new \InvalidArgumentException(sprintf('Unable to generate URL for route "%s"', $menus['route']), 0, $ex);
+        }
+
         $menu = (new Menu($url))
                 ->setLabel($menus['label'])
                 ->setPath($url);
@@ -46,6 +51,7 @@ class DefaultMenuParser implements MenuParserInterface
         try {
             $url = (null !== $path) ? $this->urlGenerator->generate($path) : null;
         } catch (\Exception $ex) {
+            trigger_error(sprintf('Invalid path "%s" for group "%s": %s', $path, $name, $ex->getMessage()), E_USER_WARNING);
             $url = null;
         }
         

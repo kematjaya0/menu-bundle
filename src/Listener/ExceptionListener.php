@@ -59,7 +59,8 @@ class ExceptionListener
             $response = new Response(
                 $this->twig->render('@Menu/access-denied.html.twig', [
                     'message' => 'access_denied_message',
-                    'title' => 'access_denied'
+                    'title' => 'access_denied',
+                    'homepage_route' => $configs['homepage_route']
                 ])
             );
             $response->setStatusCode($exception->getStatusCode());
