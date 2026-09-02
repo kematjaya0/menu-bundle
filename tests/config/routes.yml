@@ -1,0 +1,6 @@
+homepage:
+    path: /
+    controller: 'not_implemented'
+
+kmj_menu:
+    resource: '@MenuBundle/Resources/config/router.yml'

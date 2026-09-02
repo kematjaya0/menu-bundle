@@ -29,7 +29,7 @@
             <div class="login-box-body">
                 
                 <p><h3>{{ "access_denied_message"|trans }}</h3></p>
-                <a href="{{ path('homepage') }}" class="btn btn-block btn-primary"> {{'back'|trans}} {{'to'|trans}} {{ 'homepage'|trans }}</a>
+                <a href="{{ path(homepage_route|default('homepage')) }}" class="btn btn-block btn-primary"> {{'back'|trans}} {{'to'|trans}} {{ 'homepage'|trans }}</a>
                 
             </div>
         </div>

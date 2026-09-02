@@ -3,19 +3,30 @@
 namespace Kematjaya\MenuBundle\Controller;
 
 use Kematjaya\MenuBundle\MenuTreeGenerator;
+use Kematjaya\MenuBundle\Repository\URLRepository;
 use Kematjaya\URLBundle\Type\AccessControlType;
 use Kematjaya\URLBundle\Repository\URLRepositoryInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
+ * Management UI for per-route role access control.
+ *
+ * This only requires the user to be authenticated; it does not by itself
+ * restrict *which* authenticated user may reach it. Consuming applications
+ * MUST additionally protect the `kmj_menu_access_control_index` and
+ * `kmj_menu_access_control_show` routes with a `role:` entry in menu.yaml,
+ * otherwise any logged-in user can grant/revoke access on these pages.
+ *
  * @package Kematjaya\MenuBundle\Controller
  * @license https://opensource.org/licenses/MIT MIT
  * @author  Nur Hidayatullah <kematjaya0@gmail.com>
  */
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class AccessControlController extends AbstractController
 {
 
@@ -40,6 +51,16 @@ class AccessControlController extends AbstractController
             try {
 
                 $URLRepository->save($form->getData());
+
+                if ($URLRepository instanceof URLRepository) {
+                    foreach ($URLRepository->getLastSkippedRoles() as $routeName => $roles) {
+                        $this->addFlash('warning', sprintf(
+                            'change for role(s) "%s" on route "%s" was skipped: you have no authority over them.',
+                            implode(', ', $roles),
+                            $routeName
+                        ));
+                    }
+                }
 
                 $this->addFlash('info', 'update berhasil.');
 

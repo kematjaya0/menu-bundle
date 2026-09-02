@@ -15,6 +15,11 @@
         "symfony/framework-bundle": "^8.0",
         "symfony/yaml": "^8.0",
         "symfony/twig-bundle": "^8.0",
+        "symfony/security-core": "^8.0",
+        "symfony/security-bundle": "^8.0",
+        "symfony/form": "^8.0",
+        "doctrine/collections": "^2.2|^3.0",
+        "psr/log": "^3.0",
         "kematjaya/url-bundle": "^8.0"
     },
     "require-dev": {

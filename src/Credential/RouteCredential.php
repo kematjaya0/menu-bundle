@@ -48,7 +48,7 @@ class RouteCredential implements RouteCredentialInterface
             return false;
         }
         
-        $isAllowed = in_array($this->getSingleRole($user), $menu['role']);
+        $isAllowed = $this->hasAnyRole($user, $menu['role']);
         $customMenuRoles = $this->customMenuRoleBuilder->getMenuRoles($routeName);
         if ($customMenuRoles->isEmpty()) {
             return $isAllowed;
@@ -64,11 +64,9 @@ class RouteCredential implements RouteCredentialInterface
         return $isAllowed;
     }
 
-    protected function getSingleRole(UserInterface $user):?string
+    protected function hasAnyRole(UserInterface $user, array $roles): bool
     {
-        $userRoles = $user->getRoles();
-        
-        return end($userRoles);
+        return count(array_intersect($user->getRoles(), $roles)) > 0;
     }
     
     protected function getWhiteLists():array

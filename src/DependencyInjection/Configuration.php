@@ -26,6 +26,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('resources_dir')->defaultValue('%kernel.project_dir%/resources')->end()
             ->scalarNode('resources_file')->defaultValue('menu.yaml')->end()
             ->scalarNode('redirect_path_on_exception')->defaultValue(null)->end()
+            ->scalarNode('homepage_route')->defaultValue('homepage')->end()
         ->end();
 
         return $builder;

@@ -1,6 +1,9 @@
 framework:
     test: true
     secret: 'bgjhnknjhbchgbgnjv'
+    router:
+        resource: '%kernel.project_dir%/tests/config/routes.yml'
+        utf8: true
 
 security:
     firewalls:

@@ -16,6 +16,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class URLRepository extends BaseRepository
 {
+    /**
+     * Roles that were requested to be added/removed on the last save() call
+     * but were rejected because the acting user has no authority over them,
+     * keyed by route name.
+     *
+     * @var array<string, array<int, string>>
+     */
+    private array $lastSkippedRoles = [];
 
     public function __construct(private Security $security, private RoleHierarchyInterface $roleHierarchy, private MenuBuilderInterface $menuBuilder, RoutingSourceInterface $routingSource)
     {
@@ -32,20 +40,36 @@ class URLRepository extends BaseRepository
                 $result[$key] = isset($routers[$key]) ? $routers[$key] : [];
             }
 
-            $result[$key][$routeName] = in_array($role, $value['role']);
+            if (!array_key_exists($routeName, $result[$key])) {
+                // no persisted state yet for this route: fall back to the
+                // default role list declared in menu.yaml.
+                $result[$key][$routeName] = in_array($role, $value['role']);
+            }
         }
 
-        return $this->filterIdenticalPath($result);;
+        return $this->filterIdenticalPath($result);
+    }
+
+    /**
+     * @return array<string, array<int, string>> roles skipped on the last save(), keyed by route name
+     */
+    public function getLastSkippedRoles(): array
+    {
+        return $this->lastSkippedRoles;
     }
 
     public function save(array $routers): void
     {
         $menus = $this->menuBuilder->getMenus();
+        $originalMenus = $menus;
         $user = $this->security->getUser();
         if (!$user instanceof UserInterface) {
             throw new \Exception("invalid user.");
         }
+
         $roleHierarchy = $this->roleHierarchy->getReachableRoleNames($user->getRoles());
+        $this->lastSkippedRoles = [];
+
         foreach ($menus as $routeName => $value) {
             if (!isset($routers[$routeName])) {
                 continue;
@@ -55,23 +79,42 @@ class URLRepository extends BaseRepository
                 continue;
             }
 
-            $roles = array_unique($routers[$routeName]);
-            $diffRoles = array_diff($value['role'],$roles);
-            $roleHierarchyExcepts = array_filter($diffRoles, function (string $role) use ($user, $roleHierarchy) {
-                if (in_array($role, $roleHierarchy) && in_array($role, $user->getRoles())) {
-                    return true;
-                }
+            $submittedRoles = array_values(array_unique($routers[$routeName]));
+            $originalRoles = array_values(array_unique($value['role']));
 
-                return !in_array($role, $roleHierarchy);
-            });
+            $changedRoles = array_unique(array_merge(
+                array_diff($submittedRoles, $originalRoles),
+                array_diff($originalRoles, $submittedRoles)
+            ));
+            $unauthorizedRoles = array_values(array_diff($changedRoles, $roleHierarchy));
+            if (!empty($unauthorizedRoles)) {
+                $this->lastSkippedRoles[$routeName] = $unauthorizedRoles;
+            }
 
-            $menus[$routeName]['role'] = array_unique(array_merge($roles, $roleHierarchyExcepts));
-            $routers[$routeName] = $menus[$routeName]['role'];
+            // only apply the submitted state for roles the acting user has
+            // authority over (their own reachable role hierarchy); roles
+            // outside of it keep their original value untouched, whether
+            // the change would have added or removed them.
+            $finalRoles = array_values(array_unique(array_merge(
+                array_intersect($submittedRoles, $roleHierarchy),
+                array_diff($originalRoles, $roleHierarchy)
+            )));
+
+            $menus[$routeName]['role'] = $finalRoles;
+            $routers[$routeName] = $finalRoles;
         }
 
         $this->menuBuilder->dump($menus);
 
-        parent::save($routers);
+        try {
+            parent::save($routers);
+        } catch (\Throwable $ex) {
+            // keep menu.yaml and the routing storage consistent: roll back
+            // if the second write failed after the first one succeeded.
+            $this->menuBuilder->dump($originalMenus);
+
+            throw $ex;
+        }
     }
 
     protected function filterIdenticalPath(array $routes):array

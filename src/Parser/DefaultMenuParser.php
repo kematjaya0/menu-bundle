@@ -26,7 +26,12 @@ class DefaultMenuParser implements MenuParserInterface
     
     public function parse(array $menus): Menu
     {
-        $url = $this->urlGenerator->generate($menus['route'], $menus['params'] ?? []);
+        try {
+            $url = $this->urlGenerator->generate($menus['route'], $menus['params'] ?? []);
+        } catch (\Exception $ex) {
+            throw new \InvalidArgumentException(sprintf('Unable to generate URL for route "%s"', $menus['route']), 0, $ex);
+        }
+
         $menu = (new Menu($url))
                 ->setLabel($menus['label'])
                 ->setPath($url);
