@@ -22,6 +22,8 @@ class URLRepository extends BaseRepository
 
     private Security $security;
 
+    private RoutingSourceInterface $routingSource;
+
     /**
      * Roles that were requested to be added/removed on the last save() call
      * but were rejected because the acting user has no authority over them,
@@ -36,6 +38,7 @@ class URLRepository extends BaseRepository
         $this->security = $security;
         $this->menuBuilder = $menuBuilder;
         $this->roleHierarchy = $roleHierarchy;
+        $this->routingSource = $routingSource;
         parent::__construct($routingSource);
     }
 
@@ -79,6 +82,15 @@ class URLRepository extends BaseRepository
         $roleHierarchy = $this->roleHierarchy->getReachableRoleNames($user->getRoles());
         $this->lastSkippedRoles = [];
 
+        // True previous state of every route's roles, from the same source
+        // $routers was itself derived from (the routing/url storage) - NOT
+        // menu.yaml's separately-maintained 'role' snapshot, which can drift
+        // out of sync (e.g. a role granted access after menu.yaml was last
+        // written, or never mirrored into it at all). Diffing against a
+        // stale menu.yaml snapshot below would misreport such untouched
+        // roles as "changed" and silently drop them from the saved state.
+        $originalRouters = $this->routingSource->getAll();
+
         foreach ($menus as $routeName => $value) {
             if (!isset($routers[$routeName])) {
                 continue;
@@ -89,7 +101,7 @@ class URLRepository extends BaseRepository
             }
 
             $submittedRoles = array_values(array_unique($routers[$routeName]));
-            $originalRoles = array_values(array_unique($value['role']));
+            $originalRoles = array_values(array_unique($originalRouters[$routeName] ?? $value['role']));
 
             $changedRoles = array_unique(array_merge(
                 array_diff($submittedRoles, $originalRoles),
