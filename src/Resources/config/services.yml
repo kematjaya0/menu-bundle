@@ -3,40 +3,36 @@ services:
         autowire: true
         autoconfigure: true
         public: false
-        
+
     Kematjaya\MenuBundle\Builder\MenuBuilderInterface:
         class: Kematjaya\MenuBundle\Builder\YAMLMenuBuilder
-        
+
     Kematjaya\MenuBundle\Credential\RouteCredentialInterface:
         class: Kematjaya\MenuBundle\Credential\URLCredential
-        
+
     Kematjaya\URLBundle\Repository\URLRepositoryInterface:
         class: Kematjaya\MenuBundle\Repository\URLRepository
-            
+
     Kematjaya\MenuBundle\Listener\CredentialListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
-            
+
     Kematjaya\MenuBundle\Listener\ExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
-            
+
     Kematjaya\MenuBundle\MenuTreeGenerator: ~
     Kematjaya\MenuBundle\Twig\MenuExtension:
         tags: ['twig.extension']
-        
-    Kematjaya\MenuBundle\Controller\SecurityController:
-        calls: 
-            - setContainer: ['@service_container']
-            
-    Kematjaya\MenuBundle\Controller\AccessControlController:
-        calls: 
-            - setContainer: ['@service_container']
-            
+
+    Kematjaya\MenuBundle\Controller\SecurityController: ~
+
+    Kematjaya\MenuBundle\Controller\AccessControlController: ~
+
     Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface:
         class: Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilder
-        
+
     Kematjaya\MenuBundle\Builder\MenuParserBuilderInterface:
         class: Kematjaya\MenuBundle\Builder\MenuParserBuilder
-        
+
     Kematjaya\MenuBundle\Parser\DefaultMenuParser: ~

@@ -1,0 +1,14 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+
+parameters:
+    paths:
+        - src
+    level: 5
+    ignoreErrors:
+        - '#Access to an undefined property#'
+    excludePaths:
+        - tests/
+        - vendor/
+    symfony:
+        container_xml_path: var/cache/test/*.xml

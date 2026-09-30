@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         backupGlobals="false"
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php"
          colors="true"
-         bootstrap="./vendor/autoload.php">
-
+         verbose="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         stopOnFailure="false">
     <testsuites>
-        <testsuite name="menu Bundle - TestSuite">
-            <directory>./tests</directory>
+        <testsuite name="MenuBundle Test Suite">
+            <directory>tests/</directory>
         </testsuite>
     </testsuites>
 
+    <php>
+        <ini name="memory_limit" value="512M"/>
+    </php>
 </phpunit>
