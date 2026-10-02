@@ -14,27 +14,23 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
  * @license https://opensource.org/licenses/MIT MIT
  * @author  Nur Hidayatullah <kematjaya0@gmail.com>
  */
-class CsrfTokenManager implements CsrfTokenManagerInterface 
+class CsrfTokenManager implements CsrfTokenManagerInterface
 {
-    
-    public function getToken(string $tokenId): CsrfToken 
+    public function getToken(string $tokenId): CsrfToken
     {
         return new CsrfToken($tokenId);
     }
 
-    public function isTokenValid(CsrfToken $token): bool 
+    public function isTokenValid(CsrfToken $token): bool
     {
         return true;
     }
 
-    public function refreshToken(string $tokenId): CsrfToken 
+    public function refreshToken(string $tokenId): CsrfToken
     {
         return new CsrfToken($tokenId);
     }
 
-    public function removeToken(string $tokenId) 
-    {
-        
-    }
+    public function removeToken(string $tokenId): ?string {}
 
 }

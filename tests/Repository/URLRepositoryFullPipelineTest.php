@@ -9,8 +9,9 @@ use Kematjaya\URLBundle\Transformer\AccessControlTransformer;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -44,7 +45,7 @@ class URLRepositoryFullPipelineTest extends TestCase
      * access-control page -> must become ["A","C"]; an unrelated route with
      * the same three roles must stay completely untouched.
      */
-    public function testRemovingOneRoleLeavesEveryOtherRoleAndRouteUntouched()
+    public function testRemovingOneRoleLeavesEveryOtherRoleAndRouteUntouched(): void
     {
         $routingSource = $this->createRoutingSource();
         $routingSource->dump([
@@ -89,7 +90,7 @@ class URLRepositoryFullPipelineTest extends TestCase
      * the pre-fix code dropped ROLE_MIXING in production. Isolates the
      * precise trigger and confirms it no longer reproduces.
      */
-    public function testRemovingOneRoleKeepsAnotherEvenWhenMenuYamlNeverLearnedAboutIt()
+    public function testRemovingOneRoleKeepsAnotherEvenWhenMenuYamlNeverLearnedAboutIt(): void
     {
         $routingSource = $this->createRoutingSource();
         $routingSource->dump(['route_x' => ['A', 'B', 'C']]);
@@ -133,9 +134,11 @@ class URLRepositoryFullPipelineTest extends TestCase
         $user = $this->createMock(UserInterface::class);
         $user->method('getRoles')->willReturn(['ADMIN']);
 
-        $security = $this->createMock(Security::class);
-        $security->method('getUser')->willReturn($user);
+        $token = $this->createMock(TokenInterface::class);
+        $token->method('getUser')->willReturn($user);
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage->method('getToken')->willReturn($token);
 
-        return new URLRepository($security, $hierarchy, $menuBuilder, $routingSource);
+        return new URLRepository($tokenStorage, $hierarchy, $menuBuilder, $routingSource);
     }
 }

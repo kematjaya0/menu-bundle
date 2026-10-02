@@ -37,12 +37,12 @@ final class TestKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir().'/menu-kernel-'.md5(__DIR__).'/cache';
+        return sys_get_temp_dir() . '/menu-kernel-' . md5(__DIR__) . '/cache';
     }
 
     public function getLogDir(): string
     {
-        return sys_get_temp_dir().'/menu-kernel-'.md5(__DIR__).'/log';
+        return sys_get_temp_dir() . '/menu-kernel-' . md5(__DIR__) . '/log';
     }
 
     protected function configureContainer(ContainerBuilder $container): void
@@ -63,7 +63,7 @@ final class TestKernel extends Kernel
         ]);
 
         $container->loadFromExtension('twig', [
-            'default_path' => __DIR__.'/../views',
+            'default_path' => __DIR__ . '/../views',
             'strict_variables' => true,
         ]);
     }

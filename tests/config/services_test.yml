@@ -13,9 +13,9 @@ services:
     Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface:
         class: Kematjaya\MenuBundle\Tests\Util\TokenStorage
 #        
-    Symfony\Component\Security\Core\Security:
-        class: Symfony\Component\Security\Core\Security
-        
+    Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface:
+        class: Kematjaya\MenuBundle\Tests\Util\AuthorizationChecker
+
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface:
         class: Kematjaya\MenuBundle\Tests\Util\RoleHierarchy
         

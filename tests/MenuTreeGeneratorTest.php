@@ -9,6 +9,7 @@ use Kematjaya\MenuBundle\Menu\Group;
 use Kematjaya\MenuBundle\Menu\Menu;
 use Kematjaya\MenuBundle\MenuTreeGenerator;
 use Kematjaya\MenuBundle\Parser\MenuParserInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,17 +17,17 @@ use PHPUnit\Framework\TestCase;
  */
 class MenuTreeGeneratorTest extends TestCase
 {
-    private function createParser()
+    private function createParser(): MockObject
     {
         $parser = $this->createMock(MenuParserInterface::class);
-        $parser->method('createGroup')->willReturnCallback(function ($name, $path = null, $icon = null) {
+        $parser->method('createGroup')->willReturnCallback(function ($name, $path = null, ?string $icon = null): Group {
             if ('broken_group_link' === $path) {
                 throw new \InvalidArgumentException(sprintf('Invalid path "%s" for group "%s"', $path, $name));
             }
 
             return (new Group($name))->setPath($path)->setIcon($icon);
         });
-        $parser->method('parse')->willReturnCallback(function (array $menu) {
+        $parser->method('parse')->willReturnCallback(function (array $menu): Menu {
             if ('broken_route' === $menu['route']) {
                 throw new \InvalidArgumentException(sprintf('Unable to generate URL for route "%s"', $menu['route']));
             }
@@ -37,7 +38,7 @@ class MenuTreeGeneratorTest extends TestCase
         return $parser;
     }
 
-    private function createGenerator(array $menus)
+    private function createGenerator(array $menus): MenuTreeGenerator
     {
         $menuBuilder = $this->createMock(MenuBuilderInterface::class);
         $menuBuilder->method('getMenus')->willReturn($menus);
@@ -57,7 +58,7 @@ class MenuTreeGeneratorTest extends TestCase
      * which would break the entire {{ kmj_menu() }} render. It must now be
      * skipped instead, leaving the rest of the tree intact.
      */
-    public function testBrokenEntryIsSkippedWithoutBreakingTheRestOfTheGroup()
+    public function testBrokenEntryIsSkippedWithoutBreakingTheRestOfTheGroup(): void
     {
         $generator = $this->createGenerator([
             'dashboard' => ['label' => 'Dashboard', 'route' => 'dashboard'],
@@ -78,7 +79,7 @@ class MenuTreeGeneratorTest extends TestCase
      * the group must still end up being created from the next valid entry
      * instead of the whole group silently disappearing.
      */
-    public function testGroupIsStillBuiltWhenItsFirstEntryFails()
+    public function testGroupIsStillBuiltWhenItsFirstEntryFails(): void
     {
         $generator = $this->createGenerator([
             'broken_group_link' => ['label' => 'Broken', 'route' => 'broken_group_link'],

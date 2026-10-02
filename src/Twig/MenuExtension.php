@@ -3,9 +3,9 @@
 namespace Kematjaya\MenuBundle\Twig;
 
 use Kematjaya\MenuBundle\MenuTreeGenerator;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig\Environment;
 
 /**
  * @package Kematjaya\MenuBundle\Twig
@@ -14,28 +14,20 @@ use Twig\Environment;
  */
 class MenuExtension extends AbstractExtension
 {
-    private Environment $twig;
-    
-    private MenuTreeGenerator $generator;
-    
-    public function __construct(Environment $twig, MenuTreeGenerator $generator) 
-    {
-        $this->twig = $twig;
-        $this->generator = $generator;
-    }
-    
-    public function getFunctions():array
+    public function __construct(private readonly Environment $twig, private readonly MenuTreeGenerator $generator) {}
+
+    public function getFunctions(): array
     {
         return [
-            new TwigFunction('kmj_menu',[$this, 'render'], ['is_safe' => ['html']])
+            new TwigFunction('kmj_menu', $this->render(...), ['is_safe' => ['html']]),
         ];
     }
-    
-    public function render():?string
+
+    public function render(): ?string
     {
         return $this->twig->render('@Menu/render_menu.html.twig', [
             'menus' => $this->generator->generate(),
-            'default_group' => MenuTreeGenerator::GROUP_DEFAULT
+            'default_group' => MenuTreeGenerator::GROUP_DEFAULT,
         ]);
     }
 }

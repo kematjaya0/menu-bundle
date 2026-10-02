@@ -2,14 +2,13 @@
 
 namespace Kematjaya\MenuBundle\Builder;
 
-use Kematjaya\MenuBundle\Menu\CustomMenuRoleInterface;
 use Doctrine\Common\Collections\Collection;
+use Kematjaya\MenuBundle\Menu\CustomMenuRoleInterface;
 
 /**
- *
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
-interface CustomMenuRoleBuilderInterface 
+interface CustomMenuRoleBuilderInterface
 {
     public function addMenuRole(CustomMenuRoleInterface $element): self;
 

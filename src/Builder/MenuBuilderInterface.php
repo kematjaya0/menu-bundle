@@ -11,13 +11,13 @@ namespace Kematjaya\MenuBundle\Builder;
  * @license https://opensource.org/licenses/MIT MIT
  * @author  Nur Hidayatullah <kematjaya0@gmail.com>
  */
-interface MenuBuilderInterface 
+interface MenuBuilderInterface
 {
-    public function getMenus():array;
-    
-    public function exist(string $routeName):bool;
-    
-    public function getMenu(string $routeName):array;
-    
-    public function dump(array $routes):void;
+    public function getMenus(): array;
+
+    public function exist(string $routeName): bool;
+
+    public function getMenu(string $routeName): array;
+
+    public function dump(array $routes): void;
 }

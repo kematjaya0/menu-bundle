@@ -2,15 +2,16 @@
 
 namespace Kematjaya\MenuBundle\Controller;
 
-use Kematjaya\MenuBundle\Repository\URLRepository;
 use Kematjaya\MenuBundle\MenuTreeGenerator;
-use Kematjaya\UserBundle\Entity\KmjUserInterface;
-use Kematjaya\URLBundle\Type\AccessControlType;
+use Kematjaya\MenuBundle\Repository\URLRepository;
 use Kematjaya\URLBundle\Repository\URLRepositoryInterface;
+use Kematjaya\URLBundle\Type\AccessControlType;
+use Kematjaya\UserBundle\Entity\KmjUserInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Management UI for per-route role access control.
@@ -32,16 +33,16 @@ class AccessControlController extends AbstractController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         return $this->render('@Menu/access_control/index.html.twig', [
-            'roles' => $this->getRoles($roleHierarchy)
+            'roles' => $this->getRoles($roleHierarchy),
         ]);
     }
 
-    public function show(Request $request, string $role, URLRepositoryInterface $URLRepository, MenuTreeGenerator $generator)
+    public function show(Request $request, string $role, URLRepositoryInterface $URLRepository, MenuTreeGenerator $generator): RedirectResponse|Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $form = $this->createForm(AccessControlType::class, null, [
-            'role' => $role
+            'role' => $role,
         ]);
 
         $form->handleRequest($request);
@@ -71,18 +72,15 @@ class AccessControlController extends AbstractController
         return $this->render('@Menu/access_control/show.html.twig', [
             'role' => $role,
             'form' => $form->createView(),
-            "groups" => $generator->getGroupTree()
+            "groups" => $generator->getGroupTree(),
         ]);
     }
 
-    protected function getRoles(RoleHierarchyInterface $roleHierarchy):array
+    protected function getRoles(RoleHierarchyInterface $roleHierarchy): array
     {
-        $roles = array_map(function ($row) {
+        $roles = array_map(fn(string $row): ?string => KmjUserInterface::ROLE_USER === $row ? null : $row, $roleHierarchy->getReachableRoleNames($this->getUser()->getRoles()));
 
-            return KmjUserInterface::ROLE_USER === $row ? null : $row;
-        }, $roleHierarchy->getReachableRoleNames($this->getUser()->getRoles()));
-
-        return array_filter($roles, function ($row) {
+        return array_filter($roles, function (?string $row): bool {
             if (null === $row) {
                 return false;
             }

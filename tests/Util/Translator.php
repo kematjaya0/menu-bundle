@@ -13,12 +13,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * @license https://opensource.org/licenses/MIT MIT
  * @author  Nur Hidayatullah <kematjaya0@gmail.com>
  */
-class Translator implements TranslatorInterface 
+class Translator implements TranslatorInterface
 {
-    
-    public function trans(string $id, array $parameters = array(), string $domain = null, string $locale = null): string 
+    public function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         return $id;
     }
 
+    public function getLocale(): string
+    {
+        return 'en';
+    }
 }

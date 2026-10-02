@@ -3,9 +3,9 @@
 namespace Kematjaya\MenuBundle\Credential;
 
 use Kematjaya\MenuBundle\Builder\CustomMenuRoleBuilderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @package Kematjaya\MenuBundle\Credential
@@ -14,73 +14,57 @@ use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
  */
 class RouteCredential implements RouteCredentialInterface
 {
-    /**
-     * 
-     * @var MenuBuilderInterface
-     */
-    private $menuBuilder;
-    
-    /**
-     * 
-     * @param TokenStorageInterface
-     */
-    private $tokenStorage;
-    
-    /**
-     * 
-     * @var CustomMenuRoleBuilderInterface
-     */
-    private $customMenuRoleBuilder;
-    
-    public function __construct(TokenStorageInterface $tokenStorage, MenuBuilderInterface $menuBuilder, CustomMenuRoleBuilderInterface $customMenuRoleBuilder) 
-    {
-        $this->tokenStorage = $tokenStorage;
-        $this->menuBuilder = $menuBuilder;
-        $this->customMenuRoleBuilder = $customMenuRoleBuilder;
-    }
-    
-    public function getMenuBuilder():MenuBuilderInterface
+    public function __construct(
+        /**
+         * @param TokenStorageInterface
+         */
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly MenuBuilderInterface $menuBuilder,
+        private readonly CustomMenuRoleBuilderInterface $customMenuRoleBuilder
+    ) {}
+
+    public function getMenuBuilder(): MenuBuilderInterface
     {
         return $this->menuBuilder;
     }
-    
-    public function isAllowed(string $routeName): bool 
+
+    public function isAllowed(string $routeName): bool
     {
         if (in_array($routeName, $this->getWhiteLists())) {
-            
+
             return true;
         }
-        
+
         if (!$this->menuBuilder->exist($routeName)) {
-            
+
             return true;
         }
-        
+
         $menu = $this->menuBuilder->getMenu($routeName);
         if (!isset($menu['role'])) {
-            
+
             return true;
         }
-        
-        $user = null !== $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser():null;
+
+        $user = null !== $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
         if (!$user instanceof UserInterface) {
-            
+
             return false;
         }
-        
+
         $isAllowed = $this->hasAnyRole($user, $menu['role']);
         $customMenuRoles = $this->customMenuRoleBuilder->getMenuRoles($routeName);
         if ($customMenuRoles->isEmpty()) {
             return $isAllowed;
         }
-        
+
         foreach ($customMenuRoles as $customMenuRole) {
             if (!$customMenuRole->isAllowed($routeName, $menu)) {
-                
+
                 return false;
             }
         }
-        
+
         return $isAllowed;
     }
 
@@ -88,11 +72,11 @@ class RouteCredential implements RouteCredentialInterface
     {
         return count(array_intersect($user->getRoles(), $roles)) > 0;
     }
-    
-    protected function getWhiteLists():array
+
+    protected function getWhiteLists(): array
     {
         return [
-            'homepage', 'kmj_access_denied'
+            'homepage', 'kmj_access_denied',
         ];
     }
 }

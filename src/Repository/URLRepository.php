@@ -3,10 +3,10 @@
 namespace Kematjaya\MenuBundle\Repository;
 
 use Kematjaya\MenuBundle\Builder\MenuBuilderInterface;
-use Kematjaya\URLBundle\Source\RoutingSourceInterface;
 use Kematjaya\URLBundle\Repository\URLRepository as BaseRepository;
+use Kematjaya\URLBundle\Source\RoutingSourceInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -16,14 +16,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class URLRepository extends BaseRepository
 {
-    private MenuBuilderInterface $menuBuilder;
-
-    private RoleHierarchyInterface $roleHierarchy;
-
-    private Security $security;
-
-    private RoutingSourceInterface $routingSource;
-
     /**
      * Roles that were requested to be added/removed on the last save() call
      * but were rejected because the acting user has no authority over them,
@@ -33,24 +25,22 @@ class URLRepository extends BaseRepository
      */
     private array $lastSkippedRoles = [];
 
-    public function __construct(Security $security, RoleHierarchyInterface $roleHierarchy, MenuBuilderInterface $menuBuilder, RoutingSourceInterface $routingSource)
-    {
-        $this->security = $security;
-        $this->menuBuilder = $menuBuilder;
-        $this->roleHierarchy = $roleHierarchy;
-        $this->routingSource = $routingSource;
-        parent::__construct($routingSource);
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly RoleHierarchyInterface $roleHierarchy,
+        private readonly MenuBuilderInterface $menuBuilder,
+        private readonly RoutingSourceInterface $routingSource,
+    ) {
+        parent::__construct($this->routingSource);
     }
 
-    public function findAll(string $role):array
+    public function findAll(string $role): array
     {
         $routers = parent::findAll($role);
         $result = [];
         foreach ($this->getMenuWithRoles() as $routeName => $value) {
             $key = str_replace('_index', '', $routeName);
-            if (!isset($result[$key])) {
-                $result[$key] = isset($routers[$key]) ? $routers[$key] : [];
-            }
+            $result[$key] ??= $routers[$key] ?? [];
 
             if (!array_key_exists($routeName, $result[$key])) {
                 // no persisted state yet for this route: fall back to the
@@ -74,7 +64,7 @@ class URLRepository extends BaseRepository
     {
         $menus = $this->menuBuilder->getMenus();
         $originalMenus = $menus;
-        $user = $this->security->getUser();
+        $user = $this->tokenStorage->getToken()?->getUser();
         if (!$user instanceof UserInterface) {
             throw new \Exception("invalid user.");
         }
@@ -138,10 +128,10 @@ class URLRepository extends BaseRepository
         }
     }
 
-    protected function filterIdenticalPath(array $routes):array
+    protected function filterIdenticalPath(array $routes): array
     {
-        array_walk($routes, function (&$value, $k) use ($routes) {
-            $compared = array_filter($routes, function ($row) use ($value) {
+        array_walk($routes, function (array &$value, $k) use ($routes): void {
+            $compared = array_filter($routes, function ($row) use ($value): bool {
                 if ($row == $value) {
                     return false;
                 }
@@ -160,7 +150,7 @@ class URLRepository extends BaseRepository
                     if ($k === $key) {
                         continue;
                     }
-                    if (preg_match("/^".$k."_/i", $key)) {
+                    if (preg_match("/^" . $k . "_/i", $key)) {
                         continue;
                     }
                     unset($value[$key]);
@@ -171,12 +161,9 @@ class URLRepository extends BaseRepository
         return $routes;
     }
 
-    protected function getMenuWithRoles():array
+    protected function getMenuWithRoles(): array
     {
         $menus = $this->menuBuilder->getMenus();
-        return array_filter($menus, function ($menu) {
-
-            return isset($menu['role']);
-        });
+        return array_filter($menus, fn(array $menu): bool => isset($menu['role']));
     }
 }

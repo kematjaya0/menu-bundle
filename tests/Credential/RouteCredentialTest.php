@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class RouteCredentialTest extends TestCase
 {
-    private function createCredential(array $userRoles)
+    private function createCredential(array $userRoles): RouteCredential
     {
         $menuBuilder = $this->createMock(MenuBuilderInterface::class);
         $menuBuilder->method('exist')->willReturn(true);
@@ -37,14 +37,14 @@ class RouteCredentialTest extends TestCase
         return new RouteCredential($tokenStorage, $menuBuilder, $customMenuRoleBuilder);
     }
 
-    public function testAllowedWhenUserHasRequiredRole()
+    public function testAllowedWhenUserHasRequiredRole(): void
     {
         $credential = $this->createCredential(['ROLE_USER', 'ROLE_ADMIN']);
 
         $this->assertTrue($credential->isAllowed('some_route'));
     }
 
-    public function testDeniedWhenUserHasNoneOfTheRequiredRoles()
+    public function testDeniedWhenUserHasNoneOfTheRequiredRoles(): void
     {
         $credential = $this->createCredential(['ROLE_USER']);
 
@@ -56,7 +56,7 @@ class RouteCredentialTest extends TestCase
      * role returned by getRoles() (via end()), so a required role placed
      * anywhere but last was ignored and access was wrongly denied.
      */
-    public function testAllowedRegardlessOfRolePositionInUserRoles()
+    public function testAllowedRegardlessOfRolePositionInUserRoles(): void
     {
         $credential = $this->createCredential(['ROLE_ADMIN', 'ROLE_USER']);
 

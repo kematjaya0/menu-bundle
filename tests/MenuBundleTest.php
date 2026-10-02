@@ -6,9 +6,8 @@
 
 namespace Kematjaya\MenuBundle\Tests;
 
-use Twig\Environment;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Twig\Environment;
 
 /**
  * @package PiramidaTi\AdminLTEBundle\Tests
@@ -19,16 +18,16 @@ class MenuBundleTest extends WebTestCase
 {
     public static function getKernelClass(): string
     {
-        return AppKernelTest::class;
+        return AppKernel::class;
     }
-    
+
     public function testInstanceTwig(): Environment
     {
         $client = parent::createClient();
         $container = $client->getContainer();
-        
+
         $this->assertTrue($container->has('twig'));
-        
+
         return $container->get('twig');
     }
 }

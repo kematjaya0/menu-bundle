@@ -7,6 +7,7 @@
 namespace Kematjaya\MenuBundle\Tests\Util;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
 
 /**
  * @package Kematjaya\MenuBundle\Tests\Util
@@ -15,17 +16,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class UrlGenerator implements UrlGeneratorInterface
 {
-    
-    public function generate(string $name, array $parameters = array(), int $referenceType = self::ABSOLUTE_PATH): string {
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
+    {
         return $name;
     }
 
-    public function getContext(): \Symfony\Component\Routing\RequestContext {
-        
-    }
+    public function getContext(): RequestContext {}
 
-    public function setContext(\Symfony\Component\Routing\RequestContext $context) {
-        
-    }
+    public function setContext(RequestContext $context): void {}
 
 }

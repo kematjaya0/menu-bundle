@@ -6,6 +6,8 @@
 
 namespace Kematjaya\MenuBundle\Tests\Util;
 
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -15,30 +17,26 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class Router implements RouterInterface
 {
-    
-    public function generate(string $name, array $parameters = array(), int $referenceType = self::ABSOLUTE_PATH): string 
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
     {
         return $name;
     }
 
-    public function getContext(): \Symfony\Component\Routing\RequestContext 
+    public function getContext(): RequestContext
     {
-        return new \Symfony\Component\Routing\RequestContext();
+        return new RequestContext();
     }
 
-    public function getRouteCollection(): \Symfony\Component\Routing\RouteCollection 
+    public function getRouteCollection(): RouteCollection
     {
-        return new \Symfony\Component\Routing\RouteCollection();
+        return new RouteCollection();
     }
 
-    public function match(string $pathinfo): array 
+    public function match(string $pathinfo): array
     {
         return [];
     }
 
-    public function setContext(\Symfony\Component\Routing\RequestContext $context) 
-    {
-        
-    }
+    public function setContext(RequestContext $context): void {}
 
 }

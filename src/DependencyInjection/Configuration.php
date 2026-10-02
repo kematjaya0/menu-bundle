@@ -12,8 +12,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    
-    public function getConfigTreeBuilder(): TreeBuilder 
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $builder = new TreeBuilder('menu');
         $builder->getRootNode()
@@ -23,7 +22,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode("redirect_path_on_exception")->defaultValue(null)->end()
                     ->scalarNode("homepage_route")->defaultValue('homepage')->end()
                 ->end();
-        
+
         return $builder;
     }
 

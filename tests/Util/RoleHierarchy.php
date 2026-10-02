@@ -15,7 +15,6 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  */
 class RoleHierarchy implements RoleHierarchyInterface
 {
-    
     public function getReachableRoleNames(array $roles): array
     {
         return [];

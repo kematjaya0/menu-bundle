@@ -2,8 +2,8 @@
 
 namespace Kematjaya\MenuBundle\Parser;
 
-use Kematjaya\MenuBundle\Menu\Menu;
 use Kematjaya\MenuBundle\Menu\Group;
+use Kematjaya\MenuBundle\Menu\Menu;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -11,19 +11,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
-class DefaultMenuParser implements MenuParserInterface 
+class DefaultMenuParser implements MenuParserInterface
 {
-    /**
-     * 
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-    
-    public function __construct(UrlGeneratorInterface $urlGenerator) 
-    {
-        $this->urlGenerator = $urlGenerator;
-    }
-    
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator) {}
+
     public function parse(array $menus): Menu
     {
         try {
@@ -38,15 +29,15 @@ class DefaultMenuParser implements MenuParserInterface
         if (isset($menus['role'])) {
             $menu->setRoles($menus['role']);
         }
-        
+
         if (isset($menus['icon'])) {
             $menu->setIcon($menus['icon']);
         }
-        
+
         return $menu;
     }
 
-    public function createGroup(string $name, string $path = null, string $icon = null): Group 
+    public function createGroup(string $name, ?string $path = null, ?string $icon = null): Group
     {
         try {
             $url = (null !== $path) ? $this->urlGenerator->generate($path) : null;
@@ -54,7 +45,7 @@ class DefaultMenuParser implements MenuParserInterface
             trigger_error(sprintf('Invalid path "%s" for group "%s": %s', $path, $name, $ex->getMessage()), E_USER_WARNING);
             $url = null;
         }
-        
+
         return (new Group($name))
                 ->setPath($url)
                 ->setIcon($icon);

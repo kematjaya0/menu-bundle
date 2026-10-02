@@ -11,7 +11,7 @@ namespace Kematjaya\MenuBundle\Credential;
  * @license https://opensource.org/licenses/MIT MIT
  * @author  Nur Hidayatullah <kematjaya0@gmail.com>
  */
-interface RouteCredentialInterface 
+interface RouteCredentialInterface
 {
-    public function isAllowed(string $routeName):bool;
+    public function isAllowed(string $routeName): bool;
 }
